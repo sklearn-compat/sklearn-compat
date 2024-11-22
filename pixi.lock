@@ -6150,11 +6150,12 @@ packages:
   name: sklearn-compat
   version: 0.1.0.dev0
   path: .
-  sha256: c532722b41302d9d2fdcd0256c67ca2f02f63d2842960706f5be544794df8d2d
+  sha256: b78de0c162700396b27b3ab1963ec881691af558bf6b48e604f6b125b8313908
   requires_dist:
   - scikit-learn>=1.2.2,<1.6
   - pre-commit ; extra == 'lint'
   - pandas ; extra == 'tests'
+  - pytz ; extra == 'tests'
   - pytest ; extra == 'tests'
   - pytest-cov ; extra == 'tests'
   - pytest-xdist ; extra == 'tests'

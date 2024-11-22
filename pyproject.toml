@@ -20,6 +20,7 @@ lint = [
 ]
 tests = [
     "pandas",
+    "pytz",
     "pytest",
     "pytest-cov",
     "pytest-xdist",
@@ -49,6 +50,7 @@ sklearn_compat = { path = ".", editable = true }
 
 [tool.pixi.feature.tests.dependencies]
 pandas = "*"
+pytz = "*"
 pytest = "*"
 pytest-cov = "*"
 pytest-xdist = "*"
