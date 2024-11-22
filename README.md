@@ -39,3 +39,29 @@ class MyEstimator(BaseEstimator):
         X = validate_data(self, X=X, ensure_all_finite=True)
         return self
 ```
+
+#### `_check_n_features` and `_check_feature_names`
+
+Similarly to `validate_data`, these two functions have been moved to
+`sklearn.utils.validation` instead of being methods of the estimators. So the following
+code:
+
+```python
+class MyEstimator(BaseEstimator):
+    def fit(self, X, y=None):
+        self._check_n_features(X, reset=True)
+        self._check_feature_names(X, reset=True)
+        return self
+```
+
+becomes:
+
+```python
+from sklearn_compat.utils.validation import _check_n_features, _check_feature_names
+
+class MyEstimator(BaseEstimator):
+    def fit(self, X, y=None):
+        _check_n_features(self, X, reset=True)
+        _check_feature_names(self, X, reset=True)
+        return self
+```
