@@ -19,8 +19,10 @@ lint = [
     "pre-commit",
 ]
 tests = [
+    "pandas",
     "pytest",
     "pytest-cov",
+    "pytest-xdist",
 ]
 
 [project.urls]
@@ -45,10 +47,11 @@ scikit-learn = ">=1.2.2,<1.6"
 [tool.pixi.pypi-dependencies]
 sklearn_compat = { path = ".", editable = true }
 
+
 [tool.pixi.feature.tests.dependencies]
 pytest = "*"
 pytest-cov = "*"
-
+pytest-xdist = "*"
 [tool.pixi.feature.lint.dependencies]
 pre-commit = "*"
 
