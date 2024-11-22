@@ -116,7 +116,13 @@ with _print_elapsed_time("sklearn_compat", "testing"):
     time.sleep(0.1)
 ```
 
-### scikit-learn 1.3
+### Upgrading to scikit-learn 1.4
+
+### Support for metadata routing
+
+TODO
+
+### Upgrading to scikit-learn 1.3
 
 #### Parameter validation
 
