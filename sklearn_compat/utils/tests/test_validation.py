@@ -9,7 +9,8 @@ from sklearn_compat.utils.validation import (
 )
 
 
-def test_validate_data():
+@pytest.mark.parametrize("ensure_all_finite", [True, False])
+def test_validate_data(ensure_all_finite):
     """Check the behaviour of `validate_data`.
 
     This change has been introduced in scikit-learn 1.6.
@@ -18,16 +19,24 @@ def test_validate_data():
     class MyEstimator(TransformerMixin, BaseEstimator):
 
         def fit(self, X, y=None):
-            X = validate_data(self, X=X, y=y)
+            X = validate_data(self, X=X, y=y, ensure_all_finite=ensure_all_finite)
             return self
 
         def transform(self, X):
-            X = validate_data(self, X=X)
+            X = validate_data(self, X=X, ensure_all_finite=ensure_all_finite)
             return X
 
     X = [[1, 2, 3, 4]]
     est = MyEstimator()
     assert isinstance(est.fit_transform(X), np.ndarray)
+
+    X = [[1, 2, 3, np.nan]]
+    est = MyEstimator()
+    if ensure_all_finite:
+        with pytest.raises(ValueError, match="contains NaN"):
+            est.fit_transform(X)
+    else:
+        assert isinstance(est.fit_transform(X), np.ndarray)
 
 
 def test_check_n_features():
