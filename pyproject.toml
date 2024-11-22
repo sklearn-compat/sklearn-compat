@@ -47,8 +47,8 @@ scikit-learn = ">=1.2.2,<1.6"
 [tool.pixi.pypi-dependencies]
 sklearn_compat = { path = ".", editable = true }
 
-
 [tool.pixi.feature.tests.dependencies]
+pandas = "*"
 pytest = "*"
 pytest-cov = "*"
 pytest-xdist = "*"

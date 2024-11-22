@@ -26,11 +26,10 @@ jobs:
           frozen: true
 
       - name: Run tests
-        run: pixi run -e ${{ matrix.environment }} test -n 3
+        run: pixi run -e ${{ matrix.environment }} tests -n 3
 
-    # TODO: Uncomment when we want to activate the codecov action
-    #   - name: Upload coverage reports to Codecov
-    #     uses: codecov/codecov-action@v5.0.2
-    #     with:
-    #       token: ${{ secrets.CODECOV_TOKEN }}
-    #       slug: glemaitre/sklearn_compat
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5.0.2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: glemaitre/sklearn_compat
