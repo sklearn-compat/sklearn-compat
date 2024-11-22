@@ -58,9 +58,6 @@ pytest-xdist = "*"
 [tool.pixi.feature.lint.dependencies]
 pre-commit = "*"
 
-[tool.pixi.feature.sklearn12.dependencies]
-scikit-learn = "~=1.2.0"
-
 [tool.pixi.feature.sklearn13.dependencies]
 scikit-learn = "~=1.3.0"
 
@@ -69,6 +66,9 @@ scikit-learn = "~=1.4.0"
 
 [tool.pixi.feature.sklearn15.dependencies]
 scikit-learn = "~=1.5.0"
+
+# [tool.pixi.feature.sklearn16.dependencies]
+# scikit-learn = "~=1.6.0"
 
 [tool.pixi.feature.lint.tasks]
 lint = { cmd = "pre-commit install && pre-commit run -v --all-files --show-diff-on-failure" }
@@ -80,10 +80,10 @@ tests = { cmd = "pytest -vsl --cov=sklearn_compat --cov-report=xml sklearn_compa
 lint = ["lint"]
 tests = ["tests"]
 dev = ["tests", "lint"]
-ci-sklearn12 = ["tests", "lint", "sklearn12"]
 ci-sklearn13 = ["tests", "lint", "sklearn13"]
 ci-sklearn14 = ["tests", "lint", "sklearn14"]
 ci-sklearn15 = ["tests", "lint", "sklearn15"]
+# ci-sklearn16 = ["tests", "lint", "sklearn16"]
 
 [tool.black]
 line-length = 88
