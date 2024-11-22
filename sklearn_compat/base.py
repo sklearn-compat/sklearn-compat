@@ -76,4 +76,4 @@ if sklearn_version < parse_version("1.4"):
 
         return decorator
 else:
-    from sklearn.base import _fit_context
+    from sklearn.base import _fit_context  # type: ignore[no-redef]
