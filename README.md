@@ -115,3 +115,41 @@ from sklearn_compat.utils._user_interface import _print_elapsed_time
 with _print_elapsed_time("sklearn_compat", "testing"):
     time.sleep(0.1)
 ```
+
+### scikit-learn 1.3
+
+#### Parameter validation
+
+scikit-learn 1.3 introduced a new way to validate the parameters is a consistent manner.
+One could in the past define the following class:
+
+```python
+class MyEstimator(BaseEstimator):
+    def __init__(self, a=1):
+        self.a = a
+
+    def fit(self, X, y=None):
+        if self.a < 0:
+            raise ValueError("a must be positive")
+        return self
+```
+
+becomes:
+
+```python
+from sklearn_compat.base import _ParamsValidationMixin
+
+class MyEstimator(_ParamsValidationMixin, BaseEstimator):
+    _parameter_constraints = {"a": [Interval(Integral, 0, None, closed="left")]}
+
+    def __init__(self, a=1):
+        self.a = a
+
+    @_fit_context(prefer_skip_nested_validation=True)
+    def fit(self, X, y=None):
+        return self
+```
+
+The advantage is that the error raised will be more informative and consistent across
+estimators. Also, we have the possibility to skip the validation of the parameters when
+using this estimator as a meta-estimator.
