@@ -782,3 +782,27 @@ def test_skip_nested_validation_and_config_context(
         actual_skipped = g(1)
 
     assert actual_skipped == expected_skipped
+
+
+def test_param_validation():
+    """Check that a basic parameter validation works.
+
+    The vendor versioned here is from scikit-learn 1.4.
+    """
+    class MyClass(_ParamsValidationMixin, BaseEstimator):
+
+        _parameter_constraints = {
+            "a": [Interval(Real, 0, 1, closed="both")],
+        }
+
+        def __init__(self, a):
+            self.a = a
+
+        @_fit_context(prefer_skip_nested_validation=True)
+        def fit(self, X, y):
+            return self
+
+
+    MyClass(a=0.5).fit(None, None)
+    with pytest.raises(InvalidParameterError, match="The 'a' parameter"):
+        MyClass(a="bad").fit(None, None)
