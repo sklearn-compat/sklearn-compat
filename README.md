@@ -92,3 +92,26 @@ from sklearn_compat.utils._indexing import _get_column_indices
 df = pd.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
 _get_column_indices(df, key="b")
 ```
+
+#### `_print_elapsed_time`
+
+The function `_print_elapsed_time` has been moved from `sklearn.utils` to
+`sklearn.utils._user_interface`.
+
+So the following code:
+
+```python
+from sklearn.utils import _print_elapsed_time
+
+with _print_elapsed_time("sklearn_compat", "testing"):
+    time.sleep(0.1)
+```
+
+becomes:
+
+```python
+from sklearn_compat.utils._user_interface import _print_elapsed_time
+
+with _print_elapsed_time("sklearn_compat", "testing"):
+    time.sleep(0.1)
+```
