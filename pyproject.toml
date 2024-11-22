@@ -52,6 +52,7 @@ sklearn_compat = { path = ".", editable = true }
 pytest = "*"
 pytest-cov = "*"
 pytest-xdist = "*"
+
 [tool.pixi.feature.lint.dependencies]
 pre-commit = "*"
 

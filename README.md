@@ -65,3 +65,30 @@ class MyEstimator(BaseEstimator):
         _check_feature_names(self, X, reset=True)
         return self
 ```
+
+### Upgrading to scikit-learn 1.5
+
+#### `_get_column_indices`
+
+The utility function `_get_column_indices` has been moved from `sklearn.utils` to
+`sklearn.utils._indexing`.
+
+So the following code:
+
+```python
+import pandas as pd
+from sklearn.utils import _get_column_indices
+
+df = pd.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
+_get_column_indices(df, key="b")
+```
+
+becomes:
+
+```python
+import pandas as pd
+from sklearn_compat.utils._indexing import _get_column_indices
+
+df = pd.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
+_get_column_indices(df, key="b")
+```
