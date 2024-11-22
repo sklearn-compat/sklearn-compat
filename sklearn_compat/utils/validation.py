@@ -41,7 +41,7 @@ if sklearn_version < parse_version("1.4"):
         return len(fitted_attrs) > 0
 
 else:
-    from sklearn.utils.validation import _is_fitted
+    from sklearn.utils.validation import _is_fitted  # noqa: F401
 
 
 if sklearn_version < parse_version("1.6"):
@@ -52,17 +52,17 @@ if sklearn_version < parse_version("1.6"):
             force_all_finite = True
         return _estimator._validate_data(**kwargs, force_all_finite=force_all_finite)
 else:
-    from sklearn.utils.validation import validate_data
+    from sklearn.utils.validation import validate_data  # noqa: F401
 
 
 if sklearn_version < parse_version("1.6"):
     def _check_n_features(estimator, X, *, reset):
         return estimator._check_n_features(X, reset=reset)
 else:
-    from sklearn.utils.validation import _check_n_features
+    from sklearn.utils.validation import _check_n_features  # noqa: F401
 
 if sklearn_version < parse_version("1.6"):
     def _check_feature_names(estimator, X, *, reset):
         return estimator._check_feature_names(X, reset=reset)
 else:
-    from sklearn.utils.validation import _check_feature_names
+    from sklearn.utils.validation import _check_feature_names  # noqa: F401

@@ -900,8 +900,8 @@ if sklearn_version < parse_version("1.4"):
         raise ValueError(f"Unknown constraint type: {constraint}")
 
 else:
-    from sklearn.utils._param_validation import generate_invalid_param_val  # noqa
-    from sklearn.utils._param_validation import generate_valid_param  # noqa
+    from sklearn.utils._param_validation import generate_invalid_param_val  # noqa: F401
+    from sklearn.utils._param_validation import generate_valid_param  # noqa: F401
     from sklearn.utils._param_validation import validate_parameter_constraints  # noqa
     from sklearn.utils._param_validation import (
         HasMethods,
