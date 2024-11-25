@@ -143,9 +143,9 @@ class MyEstimator(BaseEstimator):
 becomes:
 
 ```python
-from sklearn_compat.base import _ParamsValidationMixin
+from sklearn_compat.base import ParamsValidationMixin
 
-class MyEstimator(_ParamsValidationMixin, BaseEstimator):
+class MyEstimator(ParamsValidationMixin, BaseEstimator):
     _parameter_constraints = {"a": [Interval(Integral, 0, None, closed="left")]}
 
     def __init__(self, a=1):

@@ -6,12 +6,12 @@ from sklearn.utils.estimator_checks import parametrize_with_checks
 from sklearn.utils.multiclass import check_classification_targets
 from sklearn.utils.validation import check_is_fitted
 
-from sklearn_compat.base import _ParamsValidationMixin, _fit_context
+from sklearn_compat.base import ParamsValidationMixin, _fit_context
 from sklearn_compat.utils.validation import validate_data
 from sklearn_compat.utils._param_validation import Interval, Integral
 
 
-class Classifier(_ParamsValidationMixin, ClassifierMixin, BaseEstimator):
+class Classifier(ParamsValidationMixin, ClassifierMixin, BaseEstimator):
 
     _parameter_constraints = {
         "seed": [Interval(Integral, 0, None, closed="left")],
@@ -41,7 +41,7 @@ class Classifier(_ParamsValidationMixin, ClassifierMixin, BaseEstimator):
         }
 
 
-class Regressor(_ParamsValidationMixin, RegressorMixin, BaseEstimator):
+class Regressor(ParamsValidationMixin, RegressorMixin, BaseEstimator):
 
     _parameter_constraints = {
         "seed": [Interval(Integral, 0, None, closed="left")],
@@ -69,7 +69,7 @@ class Regressor(_ParamsValidationMixin, RegressorMixin, BaseEstimator):
         }
 
 
-class Transformer(_ParamsValidationMixin, TransformerMixin, BaseEstimator):
+class Transformer(ParamsValidationMixin, TransformerMixin, BaseEstimator):
 
     _parameter_constraints = {"with_mean": ["boolean"], "with_std": ["boolean"]}
     _estimator_type = "transformer"

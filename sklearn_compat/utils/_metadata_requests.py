@@ -188,9 +188,8 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
         if _routing_enabled() and kwargs:
             cls_name = obj.__class__.__name__
             raise NotImplementedError(
-                f"{cls_name}.{method} cannot accept given metadata "
-                f"({set(kwargs.keys())}) since metadata routing is not yet implemented "
-                f"for {cls_name}."
+                f"{cls_name}.{method} cannot accept given metadata ({set(kwargs.keys())})"
+                f" since metadata routing is not yet implemented for {cls_name}."
             )
 
     class _RoutingNotSupportedMixin:
@@ -394,11 +393,13 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
                 warn(
                     f"Support for {param} has recently been added to this class. "
                     "To maintain backward compatibility, it is ignored now. "
-                    "You can set the request value to False to silence this "
-                    "warning, or to True to consume and use the metadata."
+                    f"Using `set_{self.method}_request({param}={{True, False}})` "
+                    "on this method of the class, you can set the request value "
+                    "to False to silence this warning, or to True to consume and "
+                    "use the metadata."
                 )
 
-        def _route_params(self, params):
+        def _route_params(self, params, parent, caller):
             """Prepare the given parameters to be passed to the method.
 
             The output of this method can be used directly as the input to the
@@ -409,11 +410,17 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
             params : dict
                 A dictionary of provided metadata.
 
+            parent : object
+                Parent class object, that routes the metadata.
+
+            caller : str
+                Method from the parent class object, where the metadata is routed from.
+
             Returns
             -------
             params : Bunch
-                A :class:`~sklearn.utils.Bunch` of {prop: value} which can be given to
-                the corresponding method.
+                A :class:`~sklearn.utils.Bunch` of {prop: value} which can be given to the
+                corresponding method.
             """
             self._check_warnings(params=params)
             unrequested = dict()
@@ -429,12 +436,26 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
                 elif alias in args:
                     res[prop] = args[alias]
             if unrequested:
+                if self.method in COMPOSITE_METHODS:
+                    callee_methods = COMPOSITE_METHODS[self.method]
+                else:
+                    callee_methods = [self.method]
+                set_requests_on = "".join(
+                    [
+                        f".set_{method}_request({{metadata}}=True/False)"
+                        for method in callee_methods
+                    ]
+                )
+                message = (
+                    f"[{', '.join([key for key in unrequested])}] are passed but are not"
+                    " explicitly set as requested or not requested for"
+                    f" {self.owner}.{self.method}, which is used within"
+                    f" {parent}.{caller}. Call `{self.owner}"
+                    + set_requests_on
+                    + "` for each metadata you want to request/ignore."
+                )
                 raise UnsetMetadataPassedError(
-                    message=(
-                        f"[{', '.join([key for key in unrequested])}] are passed but "
-                        "are not explicitly set as requested or not for"
-                        f" {self.owner}.{self.method}"
-                    ),
+                    message=message,
                     unrequested_params=unrequested,
                     routed_params=res,
                 )
@@ -553,10 +574,10 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
                 ]
                 if conflicts:
                     raise ValueError(
-                        f"Conflicting metadata requests for {', '.join(conflicts)} "
-                        f"while composing the requests for {name}. Metadata with the "
-                        f"same name for methods {', '.join(COMPOSITE_METHODS[name])} "
-                        "should have the same request value."
+                        f"Conflicting metadata requests for {', '.join(conflicts)} while"
+                        f" composing the requests for {name}. Metadata with the same name"
+                        f" for methods {', '.join(COMPOSITE_METHODS[name])} should have the"
+                        " same request value."
                     )
                 requests.update(mmr._requests)
             return MethodMetadataRequest(
@@ -589,7 +610,7 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
             """
             return getattr(self, method)._get_param_names(return_alias=return_alias)
 
-        def _route_params(self, *, method, params):
+        def _route_params(self, *, params, method, parent, caller):
             """Prepare the given parameters to be passed to the method.
 
             The output of this method can be used directly as the input to the
@@ -597,20 +618,28 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
 
             Parameters
             ----------
+            params : dict
+                A dictionary of provided metadata.
+
             method : str
                 The name of the method for which the parameters are requested and
                 routed.
 
-            params : dict
-                A dictionary of provided metadata.
+            parent : object
+                Parent class object, that routes the metadata.
+
+            caller : str
+                Method from the parent class object, where the metadata is routed from.
 
             Returns
             -------
             params : Bunch
-                A :class:`~sklearn.utils.Bunch` of {prop: value} which can be given to
-                the corresponding method.
+                A :class:`~sklearn.utils.Bunch` of {prop: value} which can be given to the
+                corresponding method.
             """
-            return getattr(self, method)._route_params(params=params)
+            return getattr(self, method)._route_params(
+                params=params, parent=parent, caller=caller
+            )
 
         def _check_warnings(self, *, method, params):
             """Check whether metadata is passed which is marked as WARN.
@@ -653,25 +682,25 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
     # This section includes all objects required for MetadataRouter which is used
     # in routers, returned by their ``get_metadata_routing``.
 
-    # This namedtuple is used to store a (mapping, routing) pair. Mapping is a
-    # MethodMapping object, and routing is the output of `get_metadata_routing`.
-    # MetadataRouter stores a collection of these namedtuples.
+    # `RouterMappingPair` is used to store a (mapping, router) tuple where `mapping` is a
+    # `MethodMapping` object and `router` is the output of `get_metadata_routing`.
+    # `MetadataRouter` stores a collection of `RouterMappingPair` objects in its
+    # `_route_mappings` attribute.
     RouterMappingPair = namedtuple("RouterMappingPair", ["mapping", "router"])
 
-    # A namedtuple storing a single method route. A collection of these namedtuples
-    # is stored in a MetadataRouter.
+    # `MethodPair` is used to store a single method routing. `MethodMapping` stores a list
+    # of `MethodPair` objects in its `_routes` attribute.
     MethodPair = namedtuple("MethodPair", ["caller", "callee"])
 
     class MethodMapping:
         """Stores the mapping between caller and callee methods for a router.
 
         This class is primarily used in a ``get_metadata_routing()`` of a router
-        object when defining the mapping between a sub-object (a sub-estimator or a
-        scorer) to the router's methods. It stores a collection of ``Route``
-        namedtuples.
+        object when defining the mapping between the router's methods and a sub-object (a
+        sub-estimator or a scorer).
 
-        Iterating through an instance of this class will yield named
-        ``MethodPair(caller, callee)`` tuples.
+        Iterating through an instance of this class yields
+        ``MethodPair(caller, callee)`` instances.
 
         .. versionadded:: 1.3
         """
@@ -687,6 +716,7 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
 
             Parameters
             ----------
+
             caller : str
                 Parent estimator's method name in which the ``callee`` is called.
 
@@ -793,9 +823,9 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
                 self._self_request = deepcopy(obj._get_metadata_request())
             else:
                 raise ValueError(
-                    "Given `obj` is neither a `MetadataRequest` nor does it implement "
-                    "the required API. Inheriting from `BaseEstimator` implements the "
-                    "required API."
+                    "Given `obj` is neither a `MetadataRequest` nor does it implement the"
+                    " required API. Inheriting from `BaseEstimator` implements the required"
+                    " API."
                 )
             return self
 
@@ -873,8 +903,8 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
                 object is stored, this parameter has no effect.
 
             ignore_self_request : bool
-                If `self._self_request` should be ignored. This is used in
-                `_route_params`. If ``True``, ``return_alias`` has no effect.
+                If `self._self_request` should be ignored. This is used in `_route_params`.
+                If ``True``, ``return_alias`` has no effect.
 
             Returns
             -------
@@ -901,7 +931,7 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
                         )
             return res
 
-        def _route_params(self, *, params, method):
+        def _route_params(self, *, params, method, parent, caller):
             """Prepare the given parameters to be passed to the method.
 
             This is used when a router is used as a child object of another router.
@@ -913,23 +943,34 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
 
             Parameters
             ----------
+            params : dict
+                A dictionary of provided metadata.
+
             method : str
                 The name of the method for which the parameters are requested and
                 routed.
 
-            params : dict
-                A dictionary of provided metadata.
+            parent : object
+                Parent class object, that routes the metadata.
+
+            caller : str
+                Method from the parent class object, where the metadata is routed from.
 
             Returns
             -------
             params : Bunch
-                A :class:`~sklearn.utils.Bunch` of {prop: value} which can be given to
-                the corresponding method.
+                A :class:`~sklearn.utils.Bunch` of {prop: value} which can be given to the
+                corresponding method.
             """
             res = Bunch()
             if self._self_request:
                 res.update(
-                    self._self_request._route_params(params=params, method=method)
+                    self._self_request._route_params(
+                        params=params,
+                        method=method,
+                        parent=parent,
+                        caller=caller,
+                    )
                 )
 
             param_names = self._get_param_names(
@@ -976,7 +1017,7 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
             -------
             params : Bunch
                 A :class:`~sklearn.utils.Bunch` of the form
-                ``{"object_name": {"method_name": {prop: value}}}`` which can be
+                ``{"object_name": {"method_name": {params: value}}}`` which can be
                 used to pass the required metadata to corresponding methods or
                 corresponding child objects.
             """
@@ -991,7 +1032,10 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
                 for _caller, _callee in mapping:
                     if _caller == caller:
                         res[name][_callee] = router._route_params(
-                            params=params, method=_callee
+                            params=params,
+                            method=_callee,
+                            parent=self.owner,
+                            caller=caller,
                         )
             return res
 
@@ -1023,8 +1067,8 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
             extra_keys = set(params.keys()) - param_names - self_params
             if extra_keys:
                 raise TypeError(
-                    f"{self.owner}.{method} got unexpected argument(s) {extra_keys}, "
-                    "which are not requested metadata in any object."
+                    f"{self.owner}.{method} got unexpected argument(s) {extra_keys}, which"
+                    " are not routed to any object."
                 )
 
         def _serialize(self):
@@ -1078,12 +1122,12 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
         Parameters
         ----------
         obj : object
+            - If the object provides a `get_metadata_routing` method, return a copy
+                of the output of that method.
             - If the object is already a
                 :class:`~sklearn.utils.metadata_routing.MetadataRequest` or a
                 :class:`~sklearn.utils.metadata_routing.MetadataRouter`, return a copy
                 of that.
-            - If the object provides a `get_metadata_routing` method, return a copy
-                of the output of that method.
             - Returns an empty :class:`~sklearn.utils.metadata_routing.MetadataRequest`
                 otherwise.
 
@@ -1205,8 +1249,8 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
                 """
                 if not _routing_enabled():
                     raise RuntimeError(
-                        "This method is only available when metadata routing is "
-                        "enabled. You can enable it using"
+                        "This method is only available when metadata routing is enabled."
+                        " You can enable it using"
                         " sklearn.set_config(enable_metadata_routing=True)."
                     )
 
@@ -1216,8 +1260,8 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
                         f"Accepted arguments are: {set(self.keys)}"
                     )
 
-                # This makes it possible to use the decorated method as an unbound
-                # method, for instance when monkeypatching.
+                # This makes it possible to use the decorated method as an unbound method,
+                # for instance when monkeypatching.
                 # https://github.com/scikit-learn/scikit-learn/issues/28632
                 if instance is None:
                     _instance = args[0]
@@ -1225,8 +1269,8 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
                 else:
                     _instance = instance
 
-                # Replicating python's behavior when positional args are given other
-                # than `self`, and `self` is only allowed if this method is unbound.
+                # Replicating python's behavior when positional args are given other than
+                # `self`, and `self` is only allowed if this method is unbound.
                 if args:
                     raise TypeError(
                         f"set_{self.name}_request() takes 0 positional argument but"
@@ -1473,9 +1517,10 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
         This function is used inside a router's method, e.g. :term:`fit`,
         to validate the metadata and handle the routing.
 
-        Assuming this signature: ``fit(self, X, y, sample_weight=None, **fit_params)``,
+        Assuming this signature of a router's fit method:
+        ``fit(self, X, y, sample_weight=None, **fit_params)``,
         a call to this function would be:
-        ``process_routing(self, sample_weight=sample_weight, **fit_params)``.
+        ``process_routing(self, "fit", sample_weight=sample_weight, **fit_params)``.
 
         Note that if routing is not enabled and ``kwargs`` is empty, then it
         returns an empty routing where ``process_routing(...).ANYTHING.ANY_METHOD``
@@ -1498,10 +1543,12 @@ if parse_version(sklearn_version.base_version) < parse_version("1.6"):
         Returns
         -------
         routed_params : Bunch
-            A :class:`~sklearn.utils.Bunch` of the form ``{"object_name":
-            {"method_name": {prop: value}}}`` which can be used to pass the required
-            metadata to corresponding methods or corresponding child objects. The object
-            names are those defined in `obj.get_metadata_routing()`.
+            A :class:`~utils.Bunch` of the form ``{"object_name": {"method_name":
+            {params: value}}}`` which can be used to pass the required metadata to
+            A :class:`~sklearn.utils.Bunch` of the form ``{"object_name": {"method_name":
+            {params: value}}}`` which can be used to pass the required metadata to
+            corresponding methods or corresponding child objects. The object names
+            are those defined in `obj.get_metadata_routing()`.
         """
         if not kwargs:
             # If routing is not enabled and kwargs are empty, then we don't have to

@@ -3,12 +3,17 @@ import functools
 from sklearn._config import config_context, get_config
 
 from .utils.validation import _is_fitted
+from .utils._metadata_requests import _MetadataRequester
 from .utils._param_validation import validate_parameter_constraints
 from .utils._version import parse_version as parse_version, sklearn_version
 
 
-# TODO: can be dropped when scikit-learn minimum version is >= 1.4
-class _ParamsValidationMixin:
+class MetadataRequesterMixin(_MetadataRequester):
+    """Mixin class to enable metadata routing."""
+    pass
+
+
+class ParamsValidationMixin:
     """Mixin class to validate parameters."""
 
     def _validate_params(self):

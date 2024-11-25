@@ -11,7 +11,7 @@ from sklearn.base import BaseEstimator
 from sklearn.model_selection import LeaveOneOut
 from sklearn.utils import deprecated
 
-from sklearn_compat.base import _ParamsValidationMixin, _fit_context
+from sklearn_compat.base import ParamsValidationMixin, _fit_context
 from sklearn_compat.utils._param_validation import (
     HasMethods,
     Hidden,
@@ -62,7 +62,7 @@ class _Class:
         """A deprecated validated method"""
 
 
-class _Estimator(_ParamsValidationMixin, BaseEstimator):
+class _Estimator(ParamsValidationMixin, BaseEstimator):
     """An estimator to test the validation of estimator parameters."""
 
     _parameter_constraints: dict = {"a": [Real]}
@@ -789,7 +789,7 @@ def test_param_validation():
 
     The vendor versioned here is from scikit-learn 1.4.
     """
-    class MyClass(_ParamsValidationMixin, BaseEstimator):
+    class MyClass(ParamsValidationMixin, BaseEstimator):
 
         _parameter_constraints = {
             "a": [Interval(Real, 0, 1, closed="both")],
