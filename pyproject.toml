@@ -80,7 +80,7 @@ scikit-learn = "~=1.5.0"
 lint = { cmd = "pre-commit install && pre-commit run -v --all-files --show-diff-on-failure" }
 
 [tool.pixi.feature.tests.tasks]
-tests = { cmd = "pytest -vsl --cov=sklearn_compat --cov-report=xml sklearn_compat" }
+tests = { cmd = "pytest -vsl --cov=sklearn_compat --cov-report=xml --cov-report=term-missing sklearn_compat" }
 
 [tool.pixi.environments]
 lint = ["lint"]

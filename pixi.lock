@@ -5380,7 +5380,7 @@ packages:
   name: sklearn-compat
   version: 0.1.0.dev0
   path: .
-  sha256: 17361ae46f37bb4f63eab6d48cc13bcbb7bf7cf62cc6c3e344b38d308f64673f
+  sha256: cdd475ab8f95b3036d24bd29cda088c8c1cf572aa8afac3f99679ef3f61bae4e
   requires_dist:
   - scikit-learn>=1.2.2,<1.6
   - pre-commit ; extra == 'lint'
