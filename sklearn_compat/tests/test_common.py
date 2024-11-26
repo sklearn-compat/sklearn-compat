@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 from sklearn.base import (
     BaseEstimator,
     ClassifierMixin,
@@ -6,11 +7,13 @@ from sklearn.base import (
     TransformerMixin,
     _fit_context,
 )
+from sklearn.datasets import make_classification
 from sklearn.utils.estimator_checks import parametrize_with_checks
 from sklearn.utils.multiclass import check_classification_targets
-from sklearn.utils.validation import check_X_y, check_array,check_is_fitted
-from sklearn.utils._param_validation import Interval, Integral
+from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
+from sklearn.utils._param_validation import Interval, Integral, StrOptions
 
+from sklearn_compat.base import ParamsValidationMixin
 from sklearn_compat.utils.validation import validate_data
 
 
@@ -205,3 +208,26 @@ class Transformer(TransformerMixin, BaseEstimator):
 )
 def test_basic_estimator(estimator, check):
     return check(estimator)
+
+
+@pytest.mark.parametrize(
+    "Estimator", [MinimalClassifier, MinimalRegressor, MinimalTransformer]
+)
+def test_parameter_validation(Estimator):
+
+    class TestEstimator(ParamsValidationMixin, Estimator):
+        """Estimator to which we apply parameter validation through the mixin."""
+
+        _parameter_constraints = {
+            "param": [StrOptions({"a", "b", "c"}), None],
+        }
+
+        @_fit_context(prefer_skip_nested_validation=True)
+        def fit(self, X, y=None):
+            return super().fit(X, y)
+
+    X, y = make_classification(n_samples=10, n_features=5, random_state=0)
+    TestEstimator().fit(X, y)
+    TestEstimator(param="a").fit(X, y)
+    with pytest.raises(ValueError, match="must be a str among"):
+        TestEstimator(param="unknown").fit(X, y)
