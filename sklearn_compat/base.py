@@ -1,12 +1,6 @@
-from sklearn.utils.metadata_routing import _MetadataRequester
 from sklearn.utils._param_validation import validate_parameter_constraints
 
 from .utils._version import parse_version as parse_version
-
-
-class MetadataRequesterMixin(_MetadataRequester):
-    """Mixin class to enable metadata routing."""
-    pass
 
 
 class ParamsValidationMixin:
