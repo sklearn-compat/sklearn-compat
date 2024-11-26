@@ -120,7 +120,26 @@ with _print_elapsed_time("sklearn_compat", "testing"):
 
 #### `process_routing`
 
+The signature of the `process_routing` function changed in scikit-learn 1.4. You don't
+need to change the import but only the call to the function. Calling the function with
+the new signature will be compatible with the previous signature as well. So a code
+looking like this:
 
+```python
+class MetaEstimator(BaseEstimator):
+    def fit(self, X, y, sample_weight=None, **fit_params):
+        params = process_routing(self, "fit", fit_params, sample_weight=sample_weight)
+        return self
+```
+
+becomes:
+
+```python
+class MetaEstimator(BaseEstimator):
+    def fit(self, X, y, sample_weight=None, **fit_params):
+        params = process_routing(self, "fit", sample_weight=sample_weight, **fit_params)
+        return self
+```
 
 ### Parameter validation
 
