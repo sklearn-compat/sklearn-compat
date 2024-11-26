@@ -118,9 +118,9 @@ with _print_elapsed_time("sklearn_compat", "testing"):
 
 ### Upgrading to scikit-learn 1.4
 
-### Support for metadata routing
+#### `process_routing`
 
-TODO
+
 
 ### Parameter validation
 
