@@ -122,15 +122,18 @@ with _print_elapsed_time("sklearn_compat", "testing"):
 
 TODO
 
-### Upgrading to scikit-learn 1.3
+### Parameter validation
 
-#### Parameter validation
+scikit-learn introduced a new way to validate parameters at `fit` time. The recommended
+way to support this feature in scikit-learn 1.3+ is to inherit from
+`sklearn.base.BaseEstimator` and decorate the `fit` method using the decorator
+`sklearn.base._fit_context`. In this package, we provide a mixin class in case you
+don't want to inherit from `sklearn.base.BaseEstimator`.
 
-scikit-learn 1.3 introduced a new way to validate the parameters is a consistent manner.
-One could in the past define the following class:
+So a small example could have been in the past:
 
 ```python
-class MyEstimator(BaseEstimator):
+class MyEstimator:
     def __init__(self, a=1):
         self.a = a
 
@@ -145,7 +148,7 @@ becomes:
 ```python
 from sklearn_compat.base import ParamsValidationMixin
 
-class MyEstimator(ParamsValidationMixin, BaseEstimator):
+class MyEstimator(ParamsValidationMixin):
     _parameter_constraints = {"a": [Interval(Integral, 0, None, closed="left")]}
 
     def __init__(self, a=1):
