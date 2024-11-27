@@ -111,7 +111,28 @@ safe_sqr(np.array([1, 2, 3]))
 _approximate_mode(class_counts=np.array([4, 2]), n_draws=3, rng=0)
 ```
 
-#### `_indexing`
+#### `fixes` module
+
+The function `_in_unstable_openblas_configuration` has been moved from `sklearn.utils`
+to `sklearn.utils.fixes`.
+
+So the following code:
+
+```python
+from sklearn.utils import _in_unstable_openblas_configuration
+
+_in_unstable_openblas_configuration()
+```
+
+becomes:
+
+```python
+from sklearn_compat.utils.fixes import _in_unstable_openblas_configuration
+
+_in_unstable_openblas_configuration()
+```
+
+#### `_indexing` module
 
 The utility function `_get_column_indices` has been moved from `sklearn.utils` to
 `sklearn.utils._indexing`.
