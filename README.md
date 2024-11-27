@@ -157,6 +157,31 @@ df = pd.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
 _get_column_indices(df, key="b")
 ```
 
+#### `_mask` module
+
+The functions `safe_mask`, `axis0_safe_slice` and `indices_to_mask` have been moved from
+`sklearn.utils` to `sklearn.utils._mask`.
+
+So the following code:
+
+```python
+from sklearn.utils import safe_mask, axis0_safe_slice, indices_to_mask
+
+safe_mask(data, condition)
+axis0_safe_slice(X, mask, X.shape[0])
+indices_to_mask(indices, 5)
+```
+
+becomes:
+
+```python
+from sklearn_compat.utils._mask import safe_mask, axis0_safe_slice, indices_to_mask
+
+safe_mask(data, condition)
+axis0_safe_slice(X, mask, X.shape[0])
+indices_to_mask(indices, 5)
+```
+
 #### `_missing` module
 
 The functions `is_scalar_nan` have been moved from `sklearn.utils` to
