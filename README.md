@@ -68,6 +68,49 @@ class MyEstimator(BaseEstimator):
 
 ### Upgrading to scikit-learn 1.5
 
+In scikit-learn 1.5, many developer utilities have been moved to dedicated modules.
+We provide a compatibility layer such that you don't have to check the version or try
+to import the utilities from different modules.
+
+In the future, when supporting scikit-learn 1.6+, you will have to change the import
+from:
+
+```python
+from sklearn_compat.utils._indexing import _safe_indexing
+```
+
+to
+
+```python
+from sklearn.utils._indexing import _safe_indexing
+```
+
+Thus, the module path will already be correct. Now, we will go into details for
+each module and function impacted.
+
+#### `extmath` module
+
+The function `safe_sqr` and `_approximate_mode` have been moved from `sklearn.utils` to
+`sklearn.utils.extmath`.
+
+So some code looking like this:
+
+```python
+from sklearn.utils import safe_sqr, _approximate_mode
+
+safe_sqr(np.array([1, 2, 3]))
+_approximate_mode(class_counts=np.array([4, 2]), n_draws=3, rng=0)
+```
+
+becomes:
+
+```python
+from sklearn_compat.utils.extmath import safe_sqr, _approximate_mode
+
+safe_sqr(np.array([1, 2, 3]))
+_approximate_mode(class_counts=np.array([4, 2]), n_draws=3, rng=0)
+```
+
 #### `_indexing`
 
 The utility function `_get_column_indices` has been moved from `sklearn.utils` to
@@ -116,31 +159,30 @@ with _print_elapsed_time("sklearn_compat", "testing"):
     time.sleep(0.1)
 ```
 
-#### `extmath` module
+#### `_optional_dependencies` module
 
-The function `safe_sqr` and `_approximate_mode` have been moved from `sklearn.utils` to
-`sklearn.utils.extmath`.
+The functions `check_matplotlib_support` and `check_pandas_support` have been moved from
+`sklearn.utils` to `sklearn.utils._optional_dependencies`.
 
-So some code looking like this:
+So the following code:
 
 ```python
-from sklearn.utils import safe_sqr, _approximate_mode
+from sklearn.utils import check_matplotlib_support, check_pandas_support
 
-safe_sqr(np.array([1, 2, 3]))
-_approximate_mode(class_counts=np.array([4, 2]), n_draws=3, rng=0)
+check_matplotlib_support("sklearn_compat")
+check_pandas_support("sklearn_compat")
 ```
 
 becomes:
 
 ```python
-from sklearn_compat.utils.extmath import safe_sqr, _approximate_mode
+from sklearn_compat.utils._optional_dependencies import (
+    check_matplotlib_support, check_pandas_support
+)
 
-safe_sqr(np.array([1, 2, 3]))
-_approximate_mode(class_counts=np.array([4, 2]), n_draws=3, rng=0)
+check_matplotlib_support("sklearn_compat")
+check_pandas_support("sklearn_compat")
 ```
-
-Thus only the import statements changed.
-
 
 ### Upgrading to scikit-learn 1.4
 
