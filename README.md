@@ -132,6 +132,42 @@ from sklearn_compat.utils.fixes import _in_unstable_openblas_configuration
 _in_unstable_openblas_configuration()
 ```
 
+#### `_chunking` module
+
+The functions `gen_batches`, `gen_even_slices` and `get_chunk_n_rows` have been moved
+from `sklearn.utils` to `sklearn.utils._chunking`. The function `chunk_generator` has
+been moved to `sklearn.utils._chunking` as well but was renamed from `_chunk_generator`
+to `chunk_generator`.
+
+So the following code:
+
+```python
+from sklearn.utils import (
+    _chunk_generator as chunk_generator,
+    gen_batches,
+    gen_even_slices,
+    get_chunk_n_rows,
+)
+
+_chunk_generator(range(10), 3)
+gen_batches(7, 3)
+gen_even_slices(10, 1)
+get_chunk_n_rows(10)
+```
+
+becomes:
+
+```python
+from sklearn_compat.utils._chunking import (
+    chunk_generator, gen_batches, gen_even_slices, get_chunk_n_rows,
+)
+
+chunk_generator(range(10), 3)
+gen_batches(7, 3)
+gen_even_slices(10, 1)
+get_chunk_n_rows(10)
+```
+
 #### `_indexing` module
 
 The utility function `_get_column_indices` has been moved from `sklearn.utils` to
