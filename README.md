@@ -68,7 +68,7 @@ class MyEstimator(BaseEstimator):
 
 ### Upgrading to scikit-learn 1.5
 
-#### `_get_column_indices`
+#### `_indexing`
 
 The utility function `_get_column_indices` has been moved from `sklearn.utils` to
 `sklearn.utils._indexing`.
@@ -93,7 +93,7 @@ df = pd.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
 _get_column_indices(df, key="b")
 ```
 
-#### `_print_elapsed_time`
+#### `_user_interface` module
 
 The function `_print_elapsed_time` has been moved from `sklearn.utils` to
 `sklearn.utils._user_interface`.
@@ -115,6 +115,32 @@ from sklearn_compat.utils._user_interface import _print_elapsed_time
 with _print_elapsed_time("sklearn_compat", "testing"):
     time.sleep(0.1)
 ```
+
+#### `extmath` module
+
+The function `safe_sqr` and `_approximate_mode` have been moved from `sklearn.utils` to
+`sklearn.utils.extmath`.
+
+So some code looking like this:
+
+```python
+from sklearn.utils import safe_sqr, _approximate_mode
+
+safe_sqr(np.array([1, 2, 3]))
+_approximate_mode(class_counts=np.array([4, 2]), n_draws=3, rng=0)
+```
+
+becomes:
+
+```python
+from sklearn_compat.utils.extmath import safe_sqr, _approximate_mode
+
+safe_sqr(np.array([1, 2, 3]))
+_approximate_mode(class_counts=np.array([4, 2]), n_draws=3, rng=0)
+```
+
+Thus only the import statements changed.
+
 
 ### Upgrading to scikit-learn 1.4
 
