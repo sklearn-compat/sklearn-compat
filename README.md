@@ -157,6 +157,30 @@ df = pd.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
 _get_column_indices(df, key="b")
 ```
 
+#### `_missing` module
+
+The functions `is_scalar_nan` have been moved from `sklearn.utils` to
+`sklearn.utils._missing`. The function `_is_pandas_na` has been moved to
+`sklearn.utils._missing` as well and renamed to `is_pandas_na`.
+
+So the following code:
+
+```python
+from sklearn.utils import is_scalar_nan, _is_pandas_na
+
+is_scalar_nan(float("nan"))
+_is_pandas_na(float("nan"))
+```
+
+becomes:
+
+```python
+from sklearn_compat.utils._missing import is_scalar_nan, is_pandas_na
+
+is_scalar_nan(float("nan"))
+is_pandas_na(float("nan"))
+```
+
 #### `_user_interface` module
 
 The function `_print_elapsed_time` has been moved from `sklearn.utils` to
