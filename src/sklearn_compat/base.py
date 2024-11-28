@@ -1,6 +1,6 @@
 from sklearn.utils._param_validation import validate_parameter_constraints
 
-from .utils._version import parse_version as parse_version
+from sklearn_compat.utils._version import parse_version as parse_version
 
 
 class ParamsValidationMixin:

@@ -1,4 +1,4 @@
-from ._version import parse_version, sklearn_version
+from sklearn_compat.utils._version import parse_version, sklearn_version
 
 if sklearn_version < parse_version("1.5"):
     from sklearn.utils import _determine_key_type  # noqa: F401
