@@ -6,6 +6,7 @@ from sklearn_compat.utils.validation import (
     validate_data,
     _check_n_features,
     _check_feature_names,
+    _to_object_array,
 )
 
 
@@ -72,3 +73,9 @@ def test_check_feature_names():
     X = pd.DataFrame([[1, 2, 3, 4]], columns=["a", "b", "c", "d"])
     est = MyEstimator().fit(X)
     np.testing.assert_array_equal(est.feature_names_in_, ["a", "b", "c", "d"])
+
+
+def test__to_object_array():
+    result = _to_object_array([np.array([0]), np.array([1])])
+    assert isinstance(result, np.ndarray)
+    assert result.dtype == object
