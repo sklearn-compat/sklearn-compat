@@ -66,6 +66,34 @@ class MyEstimator(BaseEstimator):
         return self
 ```
 
+### `Tags`, `__sklearn_tags__` and estimator tags
+
+The estimator tags infrastructure in scikit-learn 1.6 has changed. In order to be
+compatible with multiple scikit-learn versions, your estimator should implement both
+`_more_tags` and `__sklearn_tags__`:
+
+```python
+class MyEstimator(BaseEstimator):
+    def _more_tags(self):
+        return {"non_deterministic": True, "poor_score": True}
+
+    def __sklearn_tags__(self):
+        tags = super().__sklearn_tags__()
+        tags.non_deterministic = True
+        tags.regressor_tags.poor_score = True
+        return tags
+```
+
+In order to get the tags of a given estimator, you can use the `get_tags` function:
+
+```python
+from sklearn_compat.utils import get_tags
+
+tags = get_tags(MyEstimator())
+```
+
+Which uses `sklearn.utils.get_tags` under the hood from scikit-learn 1.6+.
+
 ## Upgrading to scikit-learn 1.5
 
 In scikit-learn 1.5, many developer utilities have been moved to dedicated modules.
