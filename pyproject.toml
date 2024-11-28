@@ -86,7 +86,7 @@ scikit-learn = { version = "*", channel = "conda-forge/label/scikit-learn_rc" }
 lint = { cmd = "pre-commit install && pre-commit run -v --all-files --show-diff-on-failure" }
 
 [tool.pixi.feature.tests.tasks]
-tests = { cmd = "pytest -vsl --cov=sklearn_compat --cov-report=xml --cov-report=term-missing src/sklearn_compat" }
+tests = { cmd = "pytest -vsl --cov=sklearn_compat --cov-report=xml --cov-report=term-missing tests" }
 
 [tool.pixi.environments]
 lint = ["lint"]
