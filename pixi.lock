@@ -6131,9 +6131,9 @@ packages:
   name: sklearn-compat
   version: 0.1.0.dev0
   path: .
-  sha256: 8cdb7a5bac98a92feafa92e6620a4c698f5f9c1d2de95980b14f7a95ab63f0f2
+  sha256: e39620dc1c28eecdc317a779b48de3a3614ecbffdf145c95515c68f72a09adc2
   requires_dist:
-  - scikit-learn>=1.2.2,<1.7
+  - scikit-learn>1.2,<1.7
   - ipython ; extra == 'dev'
   - mkdocs ; extra == 'docs'
   - pre-commit ; extra == 'lint'
@@ -6142,7 +6142,7 @@ packages:
   - pytest-cov ; extra == 'tests'
   - pytest-xdist ; extra == 'tests'
   - pytz ; extra == 'tests'
-  requires_python: '>=3.9'
+  requires_python: '>=3.8'
   editable: true
 - kind: conda
   name: stack_data
