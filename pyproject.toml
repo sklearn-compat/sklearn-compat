@@ -1,10 +1,17 @@
 [build-system]
-requires = ["setuptools>=64", "setuptools_scm[toml]>=8"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sklearn_compat"]
+
+[tool.hatch.version]
+path = "src/sklearn_compat/__init__.py"
 
 [project]
 name = "sklearn_compat"
-dynamic = ["version", "readme"]
+dynamic = ["version"]
+readme = "README.md"
 description = "Easy support for future features in older scikit-learn versions"
 authors = [
     { name = "Guillaume Lemaitre", email = "guillaume@probabl.ai" }
@@ -33,13 +40,6 @@ dev = [
 Homepage = "https://github.com/glemaitre/sklearn_compat"
 Source = "https://github.com/glemaitre/sklearn_compat"
 Issues = "https://github.com/glemaitre/sklearn_compat/issues"
-
-[tool.setuptools]
-packages = ["sklearn_compat"]
-
-[tool.setuptools.dynamic]
-version = { file = "sklearn_compat/VERSION.txt" }
-readme = { file = "README.md" }
 
 [tool.pixi.project]
 channels = ["conda-forge/label/scikit-learn_rc", "conda-forge"]
@@ -80,7 +80,7 @@ scikit-learn = { version = "*", channel = "conda-forge/label/scikit-learn_rc" }
 lint = { cmd = "pre-commit install && pre-commit run -v --all-files --show-diff-on-failure" }
 
 [tool.pixi.feature.tests.tasks]
-tests = { cmd = "pytest -vsl --cov=sklearn_compat --cov-report=xml --cov-report=term-missing sklearn_compat" }
+tests = { cmd = "pytest -vsl --cov=sklearn_compat --cov-report=xml --cov-report=term-missing src/sklearn_compat" }
 
 [tool.pixi.environments]
 lint = ["lint"]
