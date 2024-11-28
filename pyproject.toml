@@ -16,9 +16,21 @@ description = "Easy support for future features in older scikit-learn versions"
 authors = [
     { name = "Guillaume Lemaitre", email = "guillaume@probabl.ai" }
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.8"  # imposed by scikit-learn > 1.2
 dependencies = [
-    "scikit-learn>=1.2.2,<1.7",
+    "scikit-learn>1.2,<1.7",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "License :: OSI Approved :: BSD License",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Physics",
 ]
 
 [project.optional-dependencies]
@@ -40,16 +52,16 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/glemaitre/sklearn_compat"
-Source = "https://github.com/glemaitre/sklearn_compat"
-Issues = "https://github.com/glemaitre/sklearn_compat/issues"
+Homepage = "https://sklearn-compat.readthedocs.io/en/"
+Source = "https://github.com/sklearn-compat/sklearn-compat"
+Issues = "https://github.com/sklearn-compat/sklearn-compat/issues"
 
 [tool.pixi.project]
 channels = ["conda-forge/label/scikit-learn_rc", "conda-forge"]
 platforms = ["linux-64", "osx-arm64", "osx-64", "win-64"]
 
 [tool.pixi.dependencies]
-scikit-learn = ">=1.2.2,<1.7"
+scikit-learn = ">1.2,<1.7"
 
 [tool.pixi.pypi-dependencies]
 sklearn_compat = { path = ".", editable = true }
