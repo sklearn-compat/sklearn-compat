@@ -34,4 +34,4 @@ jobs:
         uses: codecov/codecov-action@v5.0.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: glemaitre/sklearn_compat
+          slug: sklearn-compat/sklearn_compat
