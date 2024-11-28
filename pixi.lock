@@ -5752,16 +5752,16 @@ packages:
   name: sklearn-compat
   version: 0.1.0.dev0
   path: .
-  sha256: faf671b6d12d0593ab83e3eb8c4442ed5b70fed48e23f0226a15ddeee9250102
+  sha256: 614ba3ca7230c190e057abd3c8e49b9a111892457bc9062d7dff86a083da7b93
   requires_dist:
   - scikit-learn>=1.2.2,<1.7
+  - ipython ; extra == 'dev'
   - pre-commit ; extra == 'lint'
   - pandas ; extra == 'tests'
-  - pytz ; extra == 'tests'
   - pytest ; extra == 'tests'
   - pytest-cov ; extra == 'tests'
   - pytest-xdist ; extra == 'tests'
-  - ipython ; extra == 'dev'
+  - pytz ; extra == 'tests'
   requires_python: '>=3.9'
   editable: true
 - kind: conda
