@@ -6,6 +6,7 @@ from sklearn_compat.utils.validation import (
     validate_data,
     _check_n_features,
     _check_feature_names,
+    _is_fitted,
     _to_object_array,
 )
 
@@ -79,3 +80,8 @@ def test__to_object_array():
     result = _to_object_array([np.array([0]), np.array([1])])
     assert isinstance(result, np.ndarray)
     assert result.dtype == object
+
+
+def test__is_fitted():
+    estimator = BaseEstimator()
+    assert not _is_fitted(estimator)
