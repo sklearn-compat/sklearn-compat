@@ -7,7 +7,6 @@ from sklearn_compat.utils._indexing import (
     _determine_key_type,
     _safe_indexing,
     _get_column_indices,
-    _get_column_indices_interchange,  # noqa: F401
 )
 
 

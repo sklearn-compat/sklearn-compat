@@ -11,7 +11,7 @@ authors = [
 ]
 requires-python = ">=3.9"
 dependencies = [
-    "scikit-learn>=1.2.2,<1.6",
+    "scikit-learn>=1.2.2,<1.7",
 ]
 
 [project.optional-dependencies]
@@ -42,11 +42,11 @@ version = { file = "sklearn_compat/VERSION.txt" }
 readme = { file = "README.md" }
 
 [tool.pixi.project]
-channels = ["conda-forge"]
+channels = ["conda-forge/label/scikit-learn_rc", "conda-forge"]
 platforms = ["linux-64", "osx-arm64", "osx-64", "win-64"]
 
 [tool.pixi.dependencies]
-scikit-learn = ">=1.2.2,<1.6"
+scikit-learn = ">=1.2.2,<1.7"
 
 [tool.pixi.pypi-dependencies]
 sklearn_compat = { path = ".", editable = true }
@@ -65,16 +65,16 @@ pre-commit = "*"
 ipython = "*"
 
 [tool.pixi.feature.sklearn13.dependencies]
-scikit-learn = "~=1.3.0"
+scikit-learn = { version = "~=1.3.0", channel = "conda-forge" }
 
 [tool.pixi.feature.sklearn14.dependencies]
-scikit-learn = "~=1.4.0"
+scikit-learn = { version = "~=1.4.0", channel = "conda-forge" }
 
 [tool.pixi.feature.sklearn15.dependencies]
-scikit-learn = "~=1.5.0"
+scikit-learn = { version = "~=1.5.0", channel = "conda-forge" }
 
-# [tool.pixi.feature.sklearn16.dependencies]
-# scikit-learn = "~=1.6.0"
+[tool.pixi.feature.sklearn16.dependencies]
+scikit-learn = { version = "*", channel = "conda-forge/label/scikit-learn_rc" }
 
 [tool.pixi.feature.lint.tasks]
 lint = { cmd = "pre-commit install && pre-commit run -v --all-files --show-diff-on-failure" }
@@ -89,7 +89,7 @@ dev = ["tests", "lint", "dev"]
 ci-sklearn13 = ["tests", "lint", "sklearn13"]
 ci-sklearn14 = ["tests", "lint", "sklearn14"]
 ci-sklearn15 = ["tests", "lint", "sklearn15"]
-# ci-sklearn16 = ["tests", "lint", "sklearn16"]
+ci-sklearn16 = ["tests", "lint", "sklearn16"]
 
 [tool.black]
 line-length = 88
