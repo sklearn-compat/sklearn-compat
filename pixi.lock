@@ -6131,7 +6131,7 @@ packages:
   name: sklearn-compat
   version: 0.1.0.dev0
   path: .
-  sha256: 6e20229605146b65a91b21a8d349ec850790e75f6635044545d8bc1b84449682
+  sha256: e39620dc1c28eecdc317a779b48de3a3614ecbffdf145c95515c68f72a09adc2
   requires_dist:
   - scikit-learn>1.2,<1.7
   - ipython ; extra == 'dev'
