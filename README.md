@@ -66,6 +66,34 @@ class MyEstimator(BaseEstimator):
         return self
 ```
 
+#### `Tags`, `__sklearn_tags__` and estimator tags
+
+The estimator tags infrastructure in scikit-learn 1.6 has changed. In order to be
+compatible with multiple scikit-learn versions, your estimator should implement both
+`_more_tags` and `__sklearn_tags__`:
+
+```python
+class MyEstimator(BaseEstimator):
+    def _more_tags(self):
+        return {"non_deterministic": True, "poor_score": True}
+
+    def __sklearn_tags__(self):
+        tags = super().__sklearn_tags__()
+        tags.non_deterministic = True
+        tags.regressor_tags.poor_score = True
+        return tags
+```
+
+In order to get the tags of a given estimator, you can use the `get_tags` function:
+
+```python
+from sklearn_compat.utils import get_tags
+
+tags = get_tags(MyEstimator())
+```
+
+Which uses `sklearn.utils.get_tags` under the hood from scikit-learn 1.6+.
+
 ### Upgrading to scikit-learn 1.5
 
 In scikit-learn 1.5, many developer utilities have been moved to dedicated modules.
@@ -113,23 +141,56 @@ _approximate_mode(class_counts=np.array([4, 2]), n_draws=3, rng=0)
 
 #### `fixes` module
 
-The function `_in_unstable_openblas_configuration` has been moved from `sklearn.utils`
-to `sklearn.utils.fixes`.
+The functions `_in_unstable_openblas_configuration`, `_IS_32BIT` and `_IS_WASM` have
+been moved from `sklearn.utils` to `sklearn.utils.fixes`.
 
 So the following code:
 
 ```python
-from sklearn.utils import _in_unstable_openblas_configuration
+from sklearn.utils import (
+    _in_unstable_openblas_configuration,
+    _IS_32BIT,
+    _IS_WASM,
+)
 
 _in_unstable_openblas_configuration()
+print(_IS_32BIT)
+print(_IS_WASM)
 ```
 
 becomes:
 
 ```python
-from sklearn_compat.utils.fixes import _in_unstable_openblas_configuration
+from sklearn_compat.utils.fixes import (
+    _in_unstable_openblas_configuration,
+    _IS_32BIT,
+    _IS_WASM,
+)
 
 _in_unstable_openblas_configuration()
+print(_IS_32BIT)
+print(_IS_WASM)
+```
+
+#### `validation` module
+
+The function `_to_object_array` has been moved from `sklearn.utils` to
+`sklearn.utils.validation`.
+
+So the following code:
+
+```python
+from sklearn.utils import _to_object_array
+
+_to_object_array([np.array([0]), np.array([1])])
+```
+
+becomes:
+
+```python
+from sklearn_compat.utils.validation import _to_object_array
+
+_to_object_array([np.array([0]), np.array([1])])
 ```
 
 #### `_chunking` module
@@ -170,27 +231,59 @@ get_chunk_n_rows(10)
 
 #### `_indexing` module
 
-The utility function `_get_column_indices` has been moved from `sklearn.utils` to
+The utility functions `_determine_key_type`, `_safe_indexing`, `_safe_assign`,
+`_get_column_indices`, `resample` and `shuffle` have been moved from `sklearn.utils` to
 `sklearn.utils._indexing`.
 
 So the following code:
 
 ```python
+import numpy as np
 import pandas as pd
-from sklearn.utils import _get_column_indices
+from sklearn.utils import (
+    _get_column_indices,
+    _safe_indexing,
+    _safe_assign,
+    resample,
+    shuffle,
+)
+
+_determine_key_type(np.arange(10))
 
 df = pd.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
 _get_column_indices(df, key="b")
+_safe_indexing(df, 1, axis=1)
+_safe_assign(df, 1, np.array([7, 8, 9]))
+
+array = np.arange(10)
+resample(array, n_samples=20, replace=True, random_state=0)
+shuffle(array, random_state=0)
 ```
 
 becomes:
 
 ```python
+import numpy as np
 import pandas as pd
-from sklearn_compat.utils._indexing import _get_column_indices
+from sklearn_compat.utils._indexing import (
+    _determine_key_type,
+    _safe_indexing,
+    _safe_assign,
+    _get_column_indices,
+    resample,
+    shuffle,
+)
+
+_determine_key_type(np.arange(10))
 
 df = pd.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
 _get_column_indices(df, key="b")
+_safe_indexing(df, 1, axis=1)
+_safe_assign(df, 1, np.array([7, 8, 9]))
+
+array = np.arange(10)
+resample(array, n_samples=20, replace=True, random_state=0)
+shuffle(array, random_state=0)
 ```
 
 #### `_mask` module
