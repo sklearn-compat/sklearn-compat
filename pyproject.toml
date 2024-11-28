@@ -25,6 +25,9 @@ dependencies = [
 lint = [
     "pre-commit",
 ]
+docs = [
+    "mkdocs",
+]
 tests = [
     "pandas",
     "pytz",
@@ -50,6 +53,9 @@ scikit-learn = ">=1.2.2,<1.7"
 
 [tool.pixi.pypi-dependencies]
 sklearn_compat = { path = ".", editable = true }
+
+[tool.pixi.feature.docs.dependencies]
+mkdocs = "*"
 
 [tool.pixi.feature.tests.dependencies]
 pandas = "*"
@@ -84,8 +90,9 @@ tests = { cmd = "pytest -vsl --cov=sklearn_compat --cov-report=xml --cov-report=
 
 [tool.pixi.environments]
 lint = ["lint"]
+docs = ["docs"]
 tests = ["tests"]
-dev = ["tests", "lint", "dev"]
+dev = ["docs","tests", "lint", "dev"]
 ci-sklearn13 = ["tests", "lint", "sklearn13"]
 ci-sklearn14 = ["tests", "lint", "sklearn14"]
 ci-sklearn15 = ["tests", "lint", "sklearn15"]
