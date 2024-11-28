@@ -1,4 +1,4 @@
-## Ease multi-version support for scikit-learn compatible library
+# Ease multi-version support for scikit-learn compatible library
 
 [![SPEC 0 — Minimum Supported Dependencies](https://img.shields.io/badge/SPEC-0-green?labelColor=%23004811&color=%235CA038)](https://scientific-python.org/specs/spec-0000/)
 
@@ -9,11 +9,11 @@ The aim is to support a range of scikit-learn versions as specified in the
 [SPEC0](https://scientific-python.org/specs/spec-0000/). It means that you will find
 utility to support the last 4 released version of scikit-learn.
 
-## How to adapt your scikit-learn code
+# How to adapt your scikit-learn code
 
-### Upgrading to scikit-learn 1.6
+## Upgrading to scikit-learn 1.6
 
-#### `validate_data`
+### `validate_data`
 
 Your previous code could have looked like this:
 
@@ -40,7 +40,7 @@ class MyEstimator(BaseEstimator):
         return self
 ```
 
-#### `_check_n_features` and `_check_feature_names`
+### `_check_n_features` and `_check_feature_names`
 
 Similarly to `validate_data`, these two functions have been moved to
 `sklearn.utils.validation` instead of being methods of the estimators. So the following
@@ -66,7 +66,7 @@ class MyEstimator(BaseEstimator):
         return self
 ```
 
-### Upgrading to scikit-learn 1.5
+## Upgrading to scikit-learn 1.5
 
 In scikit-learn 1.5, many developer utilities have been moved to dedicated modules.
 We provide a compatibility layer such that you don't have to check the version or try
@@ -88,7 +88,7 @@ from sklearn.utils._indexing import _safe_indexing
 Thus, the module path will already be correct. Now, we will go into details for
 each module and function impacted.
 
-#### `extmath` module
+### `extmath` module
 
 The function `safe_sqr` and `_approximate_mode` have been moved from `sklearn.utils` to
 `sklearn.utils.extmath`.
@@ -111,7 +111,7 @@ safe_sqr(np.array([1, 2, 3]))
 _approximate_mode(class_counts=np.array([4, 2]), n_draws=3, rng=0)
 ```
 
-#### `fixes` module
+### `fixes` module
 
 The functions `_in_unstable_openblas_configuration`, `_IS_32BIT` and `_IS_WASM` have
 been moved from `sklearn.utils` to `sklearn.utils.fixes`.
@@ -144,7 +144,7 @@ print(_IS_32BIT)
 print(_IS_WASM)
 ```
 
-#### `validation` module
+### `validation` module
 
 The function `_to_object_array` has been moved from `sklearn.utils` to
 `sklearn.utils.validation`.
@@ -165,7 +165,7 @@ from sklearn_compat.utils.validation import _to_object_array
 _to_object_array([np.array([0]), np.array([1])])
 ```
 
-#### `_chunking` module
+### `_chunking` module
 
 The functions `gen_batches`, `gen_even_slices` and `get_chunk_n_rows` have been moved
 from `sklearn.utils` to `sklearn.utils._chunking`. The function `chunk_generator` has
@@ -201,7 +201,7 @@ gen_even_slices(10, 1)
 get_chunk_n_rows(10)
 ```
 
-#### `_indexing` module
+### `_indexing` module
 
 The utility functions `_determine_key_type`, `_safe_indexing`, `_safe_assign`,
 `_get_column_indices`, `resample` and `shuffle` have been moved from `sklearn.utils` to
@@ -258,7 +258,7 @@ resample(array, n_samples=20, replace=True, random_state=0)
 shuffle(array, random_state=0)
 ```
 
-#### `_mask` module
+### `_mask` module
 
 The functions `safe_mask`, `axis0_safe_slice` and `indices_to_mask` have been moved from
 `sklearn.utils` to `sklearn.utils._mask`.
@@ -283,7 +283,7 @@ axis0_safe_slice(X, mask, X.shape[0])
 indices_to_mask(indices, 5)
 ```
 
-#### `_missing` module
+### `_missing` module
 
 The functions `is_scalar_nan` have been moved from `sklearn.utils` to
 `sklearn.utils._missing`. The function `_is_pandas_na` has been moved to
@@ -307,7 +307,7 @@ is_scalar_nan(float("nan"))
 is_pandas_na(float("nan"))
 ```
 
-#### `_user_interface` module
+### `_user_interface` module
 
 The function `_print_elapsed_time` has been moved from `sklearn.utils` to
 `sklearn.utils._user_interface`.
@@ -330,7 +330,7 @@ with _print_elapsed_time("sklearn_compat", "testing"):
     time.sleep(0.1)
 ```
 
-#### `_optional_dependencies` module
+### `_optional_dependencies` module
 
 The functions `check_matplotlib_support` and `check_pandas_support` have been moved from
 `sklearn.utils` to `sklearn.utils._optional_dependencies`.
@@ -355,9 +355,9 @@ check_matplotlib_support("sklearn_compat")
 check_pandas_support("sklearn_compat")
 ```
 
-### Upgrading to scikit-learn 1.4
+## Upgrading to scikit-learn 1.4
 
-#### `process_routing`
+### `process_routing`
 
 The signature of the `process_routing` function changed in scikit-learn 1.4. You don't
 need to change the import but only the call to the function. Calling the function with
@@ -380,7 +380,7 @@ class MetaEstimator(BaseEstimator):
         return self
 ```
 
-### Parameter validation
+## Parameter validation
 
 scikit-learn introduced a new way to validate parameters at `fit` time. The recommended
 way to support this feature in scikit-learn 1.3+ is to inherit from
