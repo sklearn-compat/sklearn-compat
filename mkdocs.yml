@@ -1,1 +1,68 @@
 site_name: "sklearn-compat"
+site_url: https://sklearn-compat.readthedocs.io/en/
+site_author: Guillaume Lemaitre & Adrin Jalali
+site_description: >-
+  Ease multi-version support for scikit-learn compatible library
+repo_name: sklearn-compat/sklearn-compat
+repo_url: https://github.com/sklearn-compat/sklearn-compat
+copyright: Copyright &copy; 2024 Guillaume Lemaitre & Adrin Jalali
+theme:
+  name: "material"
+  features:
+    - content.code.copy
+    - content.code.select
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/link
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch-off
+        name: Switch to system preference
+
+# Extensions
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      normalize_issue_symbols: true
+      repo_url_shorthand: true
+      user: squidfunk
+      repo: mkdocs-material
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      auto_append:
+        - includes/mkdocs.md
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde

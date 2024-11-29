@@ -31,7 +31,7 @@ up to 2 years or about 4 versions.
 
 Your previous code could have looked like this:
 
-```python
+``` py
 class MyEstimator(BaseEstimator):
     def fit(self, X, y=None):
         X = self._validate_data(X, force_all_finite=True)
@@ -45,7 +45,7 @@ There is two major changes in scikit-learn 1.6:
 
 You can now use the following code for backward compatibility:
 
-```python
+``` py
 from sklearn_compat.utils.validation import validate_data
 
 class MyEstimator(BaseEstimator):
@@ -60,7 +60,7 @@ Similarly to `validate_data`, these two functions have been moved to
 `sklearn.utils.validation` instead of being methods of the estimators. So the following
 code:
 
-```python
+``` py
 class MyEstimator(BaseEstimator):
     def fit(self, X, y=None):
         self._check_n_features(X, reset=True)
@@ -70,7 +70,7 @@ class MyEstimator(BaseEstimator):
 
 becomes:
 
-```python
+``` py
 from sklearn_compat.utils.validation import _check_n_features, _check_feature_names
 
 class MyEstimator(BaseEstimator):
@@ -86,7 +86,7 @@ The estimator tags infrastructure in scikit-learn 1.6 has changed. In order to b
 compatible with multiple scikit-learn versions, your estimator should implement both
 `_more_tags` and `__sklearn_tags__`:
 
-```python
+``` py
 class MyEstimator(BaseEstimator):
     def _more_tags(self):
         return {"non_deterministic": True, "poor_score": True}
@@ -100,7 +100,7 @@ class MyEstimator(BaseEstimator):
 
 In order to get the tags of a given estimator, you can use the `get_tags` function:
 
-```python
+``` py
 from sklearn_compat.utils import get_tags
 
 tags = get_tags(MyEstimator())
@@ -117,13 +117,13 @@ to import the utilities from different modules.
 In the future, when supporting scikit-learn 1.6+, you will have to change the import
 from:
 
-```python
+``` py
 from sklearn_compat.utils._indexing import _safe_indexing
 ```
 
 to
 
-```python
+``` py
 from sklearn.utils._indexing import _safe_indexing
 ```
 
@@ -137,7 +137,7 @@ The function `safe_sqr` and `_approximate_mode` have been moved from `sklearn.ut
 
 So some code looking like this:
 
-```python
+``` py
 from sklearn.utils import safe_sqr, _approximate_mode
 
 safe_sqr(np.array([1, 2, 3]))
@@ -146,7 +146,7 @@ _approximate_mode(class_counts=np.array([4, 2]), n_draws=3, rng=0)
 
 becomes:
 
-```python
+``` py
 from sklearn_compat.utils.extmath import safe_sqr, _approximate_mode
 
 safe_sqr(np.array([1, 2, 3]))
@@ -160,7 +160,7 @@ been moved from `sklearn.utils` to `sklearn.utils.fixes`.
 
 So the following code:
 
-```python
+``` py
 from sklearn.utils import (
     _in_unstable_openblas_configuration,
     _IS_32BIT,
@@ -174,7 +174,7 @@ print(_IS_WASM)
 
 becomes:
 
-```python
+``` py
 from sklearn_compat.utils.fixes import (
     _in_unstable_openblas_configuration,
     _IS_32BIT,
@@ -193,7 +193,7 @@ The function `_to_object_array` has been moved from `sklearn.utils` to
 
 So the following code:
 
-```python
+``` py
 from sklearn.utils import _to_object_array
 
 _to_object_array([np.array([0]), np.array([1])])
@@ -201,7 +201,7 @@ _to_object_array([np.array([0]), np.array([1])])
 
 becomes:
 
-```python
+``` py
 from sklearn_compat.utils.validation import _to_object_array
 
 _to_object_array([np.array([0]), np.array([1])])
@@ -216,7 +216,7 @@ to `chunk_generator`.
 
 So the following code:
 
-```python
+``` py
 from sklearn.utils import (
     _chunk_generator as chunk_generator,
     gen_batches,
@@ -232,7 +232,7 @@ get_chunk_n_rows(10)
 
 becomes:
 
-```python
+``` py
 from sklearn_compat.utils._chunking import (
     chunk_generator, gen_batches, gen_even_slices, get_chunk_n_rows,
 )
@@ -251,7 +251,7 @@ The utility functions `_determine_key_type`, `_safe_indexing`, `_safe_assign`,
 
 So the following code:
 
-```python
+``` py
 import numpy as np
 import pandas as pd
 from sklearn.utils import (
@@ -276,7 +276,7 @@ shuffle(array, random_state=0)
 
 becomes:
 
-```python
+``` py
 import numpy as np
 import pandas as pd
 from sklearn_compat.utils._indexing import (
@@ -307,7 +307,7 @@ The functions `safe_mask`, `axis0_safe_slice` and `indices_to_mask` have been mo
 
 So the following code:
 
-```python
+``` py
 from sklearn.utils import safe_mask, axis0_safe_slice, indices_to_mask
 
 safe_mask(data, condition)
@@ -317,7 +317,7 @@ indices_to_mask(indices, 5)
 
 becomes:
 
-```python
+``` py
 from sklearn_compat.utils._mask import safe_mask, axis0_safe_slice, indices_to_mask
 
 safe_mask(data, condition)
@@ -333,7 +333,7 @@ The functions `is_scalar_nan` have been moved from `sklearn.utils` to
 
 So the following code:
 
-```python
+``` py
 from sklearn.utils import is_scalar_nan, _is_pandas_na
 
 is_scalar_nan(float("nan"))
@@ -342,7 +342,7 @@ _is_pandas_na(float("nan"))
 
 becomes:
 
-```python
+``` py
 from sklearn_compat.utils._missing import is_scalar_nan, is_pandas_na
 
 is_scalar_nan(float("nan"))
@@ -356,7 +356,7 @@ The function `_print_elapsed_time` has been moved from `sklearn.utils` to
 
 So the following code:
 
-```python
+``` py
 from sklearn.utils import _print_elapsed_time
 
 with _print_elapsed_time("sklearn_compat", "testing"):
@@ -365,7 +365,7 @@ with _print_elapsed_time("sklearn_compat", "testing"):
 
 becomes:
 
-```python
+``` py
 from sklearn_compat.utils._user_interface import _print_elapsed_time
 
 with _print_elapsed_time("sklearn_compat", "testing"):
@@ -379,7 +379,7 @@ The functions `check_matplotlib_support` and `check_pandas_support` have been mo
 
 So the following code:
 
-```python
+``` py
 from sklearn.utils import check_matplotlib_support, check_pandas_support
 
 check_matplotlib_support("sklearn_compat")
@@ -388,7 +388,7 @@ check_pandas_support("sklearn_compat")
 
 becomes:
 
-```python
+``` py
 from sklearn_compat.utils._optional_dependencies import (
     check_matplotlib_support, check_pandas_support
 )
@@ -406,7 +406,7 @@ need to change the import but only the call to the function. Calling the functio
 the new signature will be compatible with the previous signature as well. So a code
 looking like this:
 
-```python
+``` py
 class MetaEstimator(BaseEstimator):
     def fit(self, X, y, sample_weight=None, **fit_params):
         params = process_routing(self, "fit", fit_params, sample_weight=sample_weight)
@@ -415,7 +415,7 @@ class MetaEstimator(BaseEstimator):
 
 becomes:
 
-```python
+``` py
 class MetaEstimator(BaseEstimator):
     def fit(self, X, y, sample_weight=None, **fit_params):
         params = process_routing(self, "fit", sample_weight=sample_weight, **fit_params)
@@ -432,7 +432,7 @@ don't want to inherit from `sklearn.base.BaseEstimator`.
 
 So a small example could have been in the past:
 
-```python
+``` py
 class MyEstimator:
     def __init__(self, a=1):
         self.a = a
@@ -445,7 +445,7 @@ class MyEstimator:
 
 becomes:
 
-```python
+``` py
 from sklearn_compat.base import ParamsValidationMixin
 
 class MyEstimator(ParamsValidationMixin):
