@@ -1,8 +1,9 @@
-
 from sklearn.base import BaseEstimator
+
 from sklearn_compat.utils._tags import (
     get_tags,
 )
+
 
 def test_get_tags():
     class MyEstimator(BaseEstimator):

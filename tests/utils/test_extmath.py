@@ -1,6 +1,6 @@
 import numpy as np
 
-from sklearn_compat.utils.extmath import safe_sqr, _approximate_mode
+from sklearn_compat.utils.extmath import _approximate_mode, safe_sqr
 
 
 def test__approximate_mode():

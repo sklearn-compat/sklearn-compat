@@ -8,16 +8,16 @@ from sklearn.base import (
     _fit_context,
 )
 from sklearn.datasets import make_classification
+from sklearn.utils._param_validation import Integral, Interval, StrOptions
 from sklearn.utils.estimator_checks import parametrize_with_checks
 from sklearn.utils.multiclass import check_classification_targets
 from sklearn.utils.validation import check_is_fitted
-from sklearn.utils._param_validation import Interval, Integral, StrOptions
 
 from sklearn_compat.base import ParamsValidationMixin
 from sklearn_compat.utils.validation import validate_data
 
-class Classifier(ClassifierMixin, BaseEstimator):
 
+class Classifier(ClassifierMixin, BaseEstimator):
     _parameter_constraints = {
         "seed": [Interval(Integral, 0, None, closed="left")],
     }
@@ -51,7 +51,6 @@ class Classifier(ClassifierMixin, BaseEstimator):
 
 
 class Regressor(RegressorMixin, BaseEstimator):
-
     _parameter_constraints = {
         "seed": [Interval(Integral, 0, None, closed="left")],
     }
@@ -83,7 +82,6 @@ class Regressor(RegressorMixin, BaseEstimator):
 
 
 class Transformer(TransformerMixin, BaseEstimator):
-
     _parameter_constraints = {"with_mean": ["boolean"], "with_std": ["boolean"]}
     _estimator_type = "transformer"
 
@@ -114,7 +112,6 @@ def test_basic_estimator(estimator, check):
 
 
 def test_parameter_validation():
-
     class TestEstimator(ParamsValidationMixin):
         """Estimator to which we apply parameter validation through the mixin."""
 
