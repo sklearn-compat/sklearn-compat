@@ -281,7 +281,6 @@ def get_tags(estimator):
         return _to_new_tags(_safe_tags(estimator), estimator)
 
 
-# TODO(1.7): Remove this function
 def _to_new_tags(old_tags, estimator=None):
     """Utility function convert old tags (dictionary) to new tags (dataclass)."""
     input_tags = InputTags(
