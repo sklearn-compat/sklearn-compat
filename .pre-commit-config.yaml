@@ -10,4 +10,4 @@ repos:
     rev: v0.8.0
     hooks:
     -   id: ruff
-        args: ["--fix", "--output-format=full"]
+        args: ["--fix", "--output-format=full", "--select=I"]
