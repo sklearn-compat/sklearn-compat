@@ -280,6 +280,12 @@ else:
 
 
 if sklearn_version < parse_version("1.6"):
+    # test_common
+    from sklearn.utils.estimator_checks import _construct_instance
+
+    def _construct_instances(Estimator):
+        yield _construct_instance(Estimator)
+
     # validation
     def validate_data(_estimator, /, **kwargs):
         if "ensure_all_finite" in kwargs:
@@ -305,6 +311,7 @@ if sklearn_version < parse_version("1.6"):
     )
 else:
     # test_common
+    from sklearn.utils._test_common.instance_generator import _construct_instances  # noqa: F401
 
     # validation
     from sklearn.utils.validation import validate_data  # noqa: F401
