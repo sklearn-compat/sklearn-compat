@@ -7,7 +7,9 @@
 [![PyPI](https://badge.fury.io/py/sklearn-compat.svg)](https://badge.fury.io/py/imbalanced-learn.svg)
 
 `sklearn-compat` is a small Python package that help developer writing scikit-learn
-compatible estimators to support multiple scikit-learn versions.
+compatible estimators to support multiple scikit-learn versions. Note that we provide
+a vendorable version of this package in the `src/sklearn_compat/_sklearn_compat.py`
+file if you do not want to depend on `sklearn-compat` as a package.
 
 As maintainers of third-party libraries depending on scikit-learn such as
 [`imbalanced-learn`](https://github.com/scikit-learn-contrib/imbalanced-learn),
@@ -24,6 +26,22 @@ recommendations. It means that this utility will support the `scikit-learn` vers
 up to 2 years or about 4 versions.
 
 ## How to adapt your scikit-learn code
+
+In this section, we describe succinctly the changes you need to do to your code to
+support multiple `scikit-learn` versions using `sklearn-compat` as a package. If you
+use the vendorable version of `sklearn-compat`, all imports will be changed from:
+
+``` py
+from sklearn_compat.any_submodule import any_function
+```
+
+to
+
+``` py
+from _sklearn_compat import any_function
+```
+
+where `_sklearn_compat` is the vendorable version of `sklearn-compat` in your project.
 
 ### Upgrading to scikit-learn 1.6
 
@@ -473,3 +491,9 @@ You can contribute to this package by:
 - opening a [pull-request](https://github.com/sklearn-compat/sklearn-compat/pulls) to
   add a compatibility layer that you encountered when writing your scikit-learn
   compatible estimator.
+
+Be aware that to be able to provide `sklearn-compat` as a vendorable package and a
+dependency, all the changes are implemented in the
+`src/sklearn_compat/_sklearn_compat.py` (indeed not the nicest experience). Then, we
+need to import the changes made in this file in the submodules to use `sklearn-compat`
+as a dependency.
