@@ -27,7 +27,7 @@ up to 2 years or about 4 versions.
 
 ## Upgrading to scikit-learn 1.6
 
-### `validate_data`
+### `validate_data` function
 
 Your previous code could have looked like this:
 
@@ -54,7 +54,7 @@ class MyEstimator(BaseEstimator):
         return self
 ```
 
-### `_check_n_features` and `_check_feature_names`
+### `_check_n_features` and `_check_feature_names` functions
 
 Similarly to `validate_data`, these two functions have been moved to
 `sklearn.utils.validation` instead of being methods of the estimators. So the following
@@ -399,7 +399,7 @@ check_pandas_support("sklearn_compat")
 
 ## Upgrading to scikit-learn 1.4
 
-### `process_routing`
+### `process_routing` function
 
 The signature of the `process_routing` function changed in scikit-learn 1.4. You don't
 need to change the import but only the call to the function. Calling the function with
@@ -462,3 +462,14 @@ class MyEstimator(ParamsValidationMixin):
 The advantage is that the error raised will be more informative and consistent across
 estimators. Also, we have the possibility to skip the validation of the parameters when
 using this estimator as a meta-estimator.
+
+## Contributing
+
+You can contribute to this package by:
+
+- reporting an incompatibility with a scikit-learn version on the
+  [issue tracker](https://github.com/sklearn-compat/sklearn-compat/issues). We will
+  do our best to provide a compatibility layer.
+- opening a [pull-request](https://github.com/sklearn-compat/sklearn-compat/pulls) to
+  add a compatibility layer that you encountered when writing your scikit-learn
+  compatible estimator.
