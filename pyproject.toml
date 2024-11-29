@@ -132,3 +132,4 @@ exclude = '''
 
 [tool.ruff]
 line-length = 88
+lint.select = ["I"]
