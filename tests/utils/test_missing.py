@@ -1,4 +1,4 @@
-from sklearn_compat.utils._missing import is_scalar_nan, is_pandas_na
+from sklearn_compat.utils._missing import is_pandas_na, is_scalar_nan
 
 
 def test_is_scalar_nan():

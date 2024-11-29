@@ -1,12 +1,12 @@
-import pytest
 import numpy as np
+import pytest
 
 from sklearn_compat.utils._indexing import (
+    _determine_key_type,
+    _get_column_indices,
+    _safe_indexing,
     resample,
     shuffle,
-    _determine_key_type,
-    _safe_indexing,
-    _get_column_indices,
 )
 
 

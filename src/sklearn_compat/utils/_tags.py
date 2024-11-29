@@ -13,12 +13,12 @@ def _dataclass_args():
 
 try:
     from sklearn.utils import (
-        InputTags,
-        TargetTags,
-        TransformerTags,
         ClassifierTags,
+        InputTags,
         RegressorTags,
         Tags,
+        TargetTags,
+        TransformerTags,
     )
 except ImportError:
 

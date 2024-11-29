@@ -1,6 +1,5 @@
 from sklearn_compat.utils._version import parse_version, sklearn_version
 
-
 if sklearn_version < parse_version("1.4"):
 
     def _is_fitted(estimator, attributes=None, all_or_any=all):

@@ -8,8 +8,8 @@ def test_print_elapsed_time():
 
     This change has been done in scikit-learn 1.5.
     """
-    from io import StringIO
     import sys
+    from io import StringIO
 
     stdout = StringIO()
     sys.stdout = stdout

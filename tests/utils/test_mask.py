@@ -1,6 +1,6 @@
 import numpy as np
 
-from sklearn_compat.utils._mask import safe_mask, axis0_safe_slice, indices_to_mask
+from sklearn_compat.utils._mask import axis0_safe_slice, indices_to_mask, safe_mask
 
 
 def test_safe_mask():

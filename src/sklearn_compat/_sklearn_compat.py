@@ -310,28 +310,6 @@ if sklearn_version < parse_version("1.6"):
         return estimator._check_feature_names(X, reset=reset)
 
     # tags infrastructure
-    from sklearn.utils import (
-        ClassifierTags,
-        InputTags,
-        RegressorTags,
-        Tags,
-        TargetTags,
-        TransformerTags,
-    )
-else:
-    # test_common
-    from sklearn.utils._test_common.instance_generator import (
-        _construct_instances,  # noqa: F401
-    )
-
-    # validation
-    from sklearn.utils.validation import (
-        _check_feature_names,  # noqa: F401
-        _check_n_features,  # noqa: F401
-        validate_data,  # noqa: F401
-    )
-
-    # tags infrastructure
     @dataclass(**_dataclass_args())
     class InputTags:
         """Tags for the input data.
@@ -559,3 +537,25 @@ else:
         requires_fit: bool = True
         _skip_test: bool = False
         input_tags: InputTags = field(default_factory=InputTags)
+
+else:
+    # test_common
+    # tags infrastructure
+    from sklearn.utils import (
+        ClassifierTags,
+        InputTags,
+        RegressorTags,
+        Tags,
+        TargetTags,
+        TransformerTags,
+    )
+    from sklearn.utils._test_common.instance_generator import (
+        _construct_instances,  # noqa: F401
+    )
+
+    # validation
+    from sklearn.utils.validation import (
+        _check_feature_names,  # noqa: F401
+        _check_n_features,  # noqa: F401
+        validate_data,  # noqa: F401
+    )

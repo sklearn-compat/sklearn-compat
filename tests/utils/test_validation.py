@@ -3,11 +3,11 @@ import pytest
 from sklearn.base import BaseEstimator, TransformerMixin
 
 from sklearn_compat.utils.validation import (
-    validate_data,
-    _check_n_features,
     _check_feature_names,
+    _check_n_features,
     _is_fitted,
     _to_object_array,
+    validate_data,
 )
 
 
@@ -19,7 +19,6 @@ def test_validate_data(ensure_all_finite):
     """
 
     class MyEstimator(TransformerMixin, BaseEstimator):
-
         def fit(self, X, y=None):
             X = validate_data(self, X=X, y=y, ensure_all_finite=ensure_all_finite)
             return self
@@ -48,7 +47,6 @@ def test_check_n_features():
     """
 
     class MyEstimator(TransformerMixin, BaseEstimator):
-
         def fit(self, X, y=None):
             X = _check_n_features(self, X, reset=True)
             return self
@@ -66,7 +64,6 @@ def test_check_feature_names():
     pd = pytest.importorskip("pandas")
 
     class MyEstimator(TransformerMixin, BaseEstimator):
-
         def fit(self, X, y=None):
             X = _check_feature_names(self, X, reset=True)
             return self
