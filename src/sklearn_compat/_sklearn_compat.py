@@ -1,3 +1,14 @@
+"""Ease developer experience to support multiple versions of scikit-learn.
+
+This file is intended to be vendored in your project if you do not want to depend on
+`sklearn-compat` as a package. Then, you can import directly from this file.
+
+Be aware that depending on `sklearn-compat` does not add any additional dependencies:
+we are only depending on `scikit-learn`.
+
+Version: 0.1.0
+"""
+
 from __future__ import annotations
 
 import platform
