@@ -4,7 +4,7 @@
 ![GitHub Actions CI](https://github.com/sklearn-compat/sklearn-compat/actions/workflows/testing.yml/badge.svg)
 [![codecov](https://codecov.io/gh/sklearn-compat/sklearn-compat/graph/badge.svg?token=cndAFPqxhF)](https://codecov.io/gh/sklearn-compat/sklearn-compat)
 [![Python Version](https://img.shields.io/pypi/pyversions/sklearn-compat.svg)](https://img.shields.io/pypi/pyversions/sklearn-compat.svg)
-[![PyPI](https://badge.fury.io/py/sklearn-compat.svg)](https://badge.fury.io/py/imbalanced-learn.svg)
+[![PyPI](https://badge.fury.io/py/sklearn-compat.svg)](https://badge.fury.io/py/sklearn-compat.svg)
 
 `sklearn-compat` is a small Python package that help developer writing scikit-learn
 compatible estimators to support multiple scikit-learn versions. Note that we provide
