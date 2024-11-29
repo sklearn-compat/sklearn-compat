@@ -16,11 +16,10 @@ from sklearn.utils.estimator_checks import parametrize_with_checks
 from sklearn.utils.multiclass import check_classification_targets
 from sklearn.utils.validation import check_is_fitted
 
-from sklearn_compat._vendor_sklearn_compat import (
+from sklearn_compat._sklearn_compat import (
     _IS_32BIT,
     _IS_WASM,
     ParamsValidationMixin,
-    __version__,
     _approximate_mode,
     _check_feature_names,
     _check_n_features,
@@ -52,7 +51,6 @@ from sklearn_compat._vendor_sklearn_compat import (
 
 
 class Classifier(ClassifierMixin, BaseEstimator):
-
     _parameter_constraints = {
         "seed": [Interval(Integral, 0, None, closed="left")],
     }
@@ -86,7 +84,6 @@ class Classifier(ClassifierMixin, BaseEstimator):
 
 
 class Regressor(RegressorMixin, BaseEstimator):
-
     _parameter_constraints = {
         "seed": [Interval(Integral, 0, None, closed="left")],
     }
@@ -118,7 +115,6 @@ class Regressor(RegressorMixin, BaseEstimator):
 
 
 class Transformer(TransformerMixin, BaseEstimator):
-
     _parameter_constraints = {"with_mean": ["boolean"], "with_std": ["boolean"]}
     _estimator_type = "transformer"
 
@@ -304,7 +300,6 @@ def test_validate_data(ensure_all_finite):
     """
 
     class MyEstimator(TransformerMixin, BaseEstimator):
-
         def fit(self, X, y=None):
             X = validate_data(self, X=X, y=y, ensure_all_finite=ensure_all_finite)
             return self
@@ -333,7 +328,6 @@ def test_check_n_features():
     """
 
     class MyEstimator(TransformerMixin, BaseEstimator):
-
         def fit(self, X, y=None):
             X = _check_n_features(self, X, reset=True)
             return self
@@ -351,7 +345,6 @@ def test_check_feature_names():
     pd = pytest.importorskip("pandas")
 
     class MyEstimator(TransformerMixin, BaseEstimator):
-
         def fit(self, X, y=None):
             X = _check_feature_names(self, X, reset=True)
             return self
@@ -371,6 +364,7 @@ def test__is_fitted():
     estimator = BaseEstimator()
     assert not _is_fitted(estimator)
 
+
 @parametrize_with_checks(
     [
         Classifier(),
@@ -383,7 +377,6 @@ def test_basic_estimator(estimator, check):
 
 
 def test_parameter_validation():
-
     class TestEstimator(ParamsValidationMixin):
         """Estimator to which we apply parameter validation through the mixin."""
 
@@ -408,10 +401,5 @@ def test_parameter_validation():
         TestEstimator(param="unknown").fit(X, y)
 
 
-
 def test__construct_instances():
     list(iter(_construct_instances(LinearRegression)))
-
-
-def test_version():
-    assert isinstance(__version__, str)

@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-import sys
 import platform
+import sys
 from dataclasses import dataclass, field
 
 import sklearn
-from sklearn.utils.fixes import parse_version
 from sklearn.utils._param_validation import validate_parameter_constraints
+from sklearn.utils.fixes import parse_version
 
 sklearn_version = parse_version(parse_version(sklearn.__version__).base_version)
 
@@ -189,87 +189,96 @@ else:
 
 if sklearn_version < parse_version("1.5"):
     # chunking
-    from sklearn.utils import _chunk_generator as chunk_generator  # noqa: F401
-    from sklearn.utils import gen_batches  # noqa: F401
-    from sklearn.utils import gen_even_slices  # noqa: F401
-    from sklearn.utils import get_chunk_n_rows  # noqa: F401
-
     # extmath
-    from sklearn.utils import safe_sqr  # noqa: F401
-    from sklearn.utils import _approximate_mode  # noqa: F401
-
     # fixes
-    from sklearn.utils import _in_unstable_openblas_configuration  # noqa: F401
-    from sklearn.utils import _IS_32BIT  # noqa: F401
+    from sklearn.utils import (
+        _IS_32BIT,  # noqa: F401
+        _approximate_mode,  # noqa: F401
+        _in_unstable_openblas_configuration,  # noqa: F401
+        gen_batches,  # noqa: F401
+        gen_even_slices,  # noqa: F401
+        get_chunk_n_rows,  # noqa: F401
+        safe_sqr,  # noqa: F401
+    )
+    from sklearn.utils import _chunk_generator as chunk_generator  # noqa: F401
 
     _IS_WASM = platform.machine() in ["wasm32", "wasm64"]
     # indexing
-    from sklearn.utils import _determine_key_type  # noqa: F401
-    from sklearn.utils import _safe_indexing  # noqa: F401
-    from sklearn.utils import _safe_assign  # noqa: F401
-    from sklearn.utils import _get_column_indices  # noqa: F401
-    from sklearn.utils import resample  # noqa: F401
-    from sklearn.utils import shuffle  # noqa: F401
-
     # mask
-    from sklearn.utils import safe_mask  # noqa: F401
-    from sklearn.utils import axis0_safe_slice  # noqa: F401
-    from sklearn.utils import indices_to_mask  # noqa: F401
-
     # missing
-    from sklearn.utils import is_scalar_nan  # noqa: F401
-    from sklearn.utils import _is_pandas_na as is_pandas_na  # noqa: F401
-
     # optional dependencies
-    from sklearn.utils import check_matplotlib_support  # noqa: F401
-    from sklearn.utils import check_pandas_support  # noqa: F401
-
     # user interface
-    from sklearn.utils import _print_elapsed_time  # noqa: F401
-
     # validation
-    from sklearn.utils import _to_object_array  # noqa: F401
+    from sklearn.utils import (
+        _determine_key_type,  # noqa: F401
+        _get_column_indices,  # noqa: F401
+        _print_elapsed_time,  # noqa: F401
+        _safe_assign,  # noqa: F401
+        _safe_indexing,  # noqa: F401
+        _to_object_array,  # noqa: F401
+        axis0_safe_slice,  # noqa: F401
+        check_matplotlib_support,  # noqa: F401
+        check_pandas_support,  # noqa: F401
+        indices_to_mask,  # noqa: F401
+        is_scalar_nan,  # noqa: F401
+        resample,  # noqa: F401
+        safe_mask,  # noqa: F401
+        shuffle,  # noqa: F401
+    )
+    from sklearn.utils import _is_pandas_na as is_pandas_na  # noqa: F401
 else:
     # chunking
-    from sklearn.utils._chunking import chunk_generator  # noqa: F401
-    from sklearn.utils._chunking import gen_batches  # noqa: F401
-    from sklearn.utils._chunking import gen_even_slices  # noqa: F401
-    from sklearn.utils._chunking import get_chunk_n_rows  # noqa: F401
-
-    # extmath
-    from sklearn.utils.extmath import safe_sqr  # noqa: F401
-    from sklearn.utils.extmath import _approximate_mode  # noqa: F401
-
-    # fixes
-    from sklearn.utils.fixes import _in_unstable_openblas_configuration  # noqa: F401
-    from sklearn.utils.fixes import _IS_WASM  # noqa: F401
-    from sklearn.utils.fixes import _IS_32BIT  # noqa: F401
+    from sklearn.utils._chunking import (
+        chunk_generator,  # noqa: F401
+        gen_batches,  # noqa: F401
+        gen_even_slices,  # noqa: F401
+        get_chunk_n_rows,  # noqa: F401
+    )
 
     # indexing
-    from sklearn.utils._indexing import _determine_key_type  # noqa: F401
-    from sklearn.utils._indexing import _safe_indexing  # noqa: F401
-    from sklearn.utils._indexing import _safe_assign  # noqa: F401
-    from sklearn.utils._indexing import _get_column_indices  # noqa: F401
-    from sklearn.utils._indexing import resample  # noqa: F401
-    from sklearn.utils._indexing import shuffle  # noqa: F401
+    from sklearn.utils._indexing import (
+        _determine_key_type,  # noqa: F401
+        _get_column_indices,  # noqa: F401
+        _safe_assign,  # noqa: F401
+        _safe_indexing,  # noqa: F401
+        resample,  # noqa: F401
+        shuffle,  # noqa: F401
+    )
 
     # mask
-    from sklearn.utils._mask import safe_mask  # noqa: F401
-    from sklearn.utils._mask import axis0_safe_slice  # noqa: F401
-    from sklearn.utils._mask import indices_to_mask  # noqa: F401
+    from sklearn.utils._mask import (
+        axis0_safe_slice,  # noqa: F401
+        indices_to_mask,  # noqa: F401
+        safe_mask,  # noqa: F401
+    )
 
     # missing
-    from sklearn.utils._missing import is_scalar_nan  # noqa: F401
-    from sklearn.utils._missing import is_pandas_na  # noqa: F401
+    from sklearn.utils._missing import (
+        is_pandas_na,  # noqa: F401
+        is_scalar_nan,  # noqa: F401
+    )
 
     # optional dependencies
     from sklearn.utils._optional_dependencies import (  # noqa: F401
         check_matplotlib_support,
+        check_pandas_support,  # noqa: F401
     )
-    from sklearn.utils._optional_dependencies import check_pandas_support  # noqa: F401
 
     # user interface
     from sklearn.utils._user_interface import _print_elapsed_time  # noqa: F401
+
+    # extmath
+    from sklearn.utils.extmath import (
+        _approximate_mode,  # noqa: F401
+        safe_sqr,  # noqa: F401
+    )
+
+    # fixes
+    from sklearn.utils.fixes import (
+        _IS_32BIT,  # noqa: F401
+        _IS_WASM,  # noqa: F401
+        _in_unstable_openblas_configuration,  # noqa: F401
+    )
 
     # validation
     from sklearn.utils.validation import _to_object_array  # noqa: F401
@@ -302,21 +311,25 @@ if sklearn_version < parse_version("1.6"):
 
     # tags infrastructure
     from sklearn.utils import (
-        InputTags,
-        TargetTags,
-        TransformerTags,
         ClassifierTags,
+        InputTags,
         RegressorTags,
         Tags,
+        TargetTags,
+        TransformerTags,
     )
 else:
     # test_common
-    from sklearn.utils._test_common.instance_generator import _construct_instances  # noqa: F401
+    from sklearn.utils._test_common.instance_generator import (
+        _construct_instances,  # noqa: F401
+    )
 
     # validation
-    from sklearn.utils.validation import validate_data  # noqa: F401
-    from sklearn.utils.validation import _check_n_features  # noqa: F401
-    from sklearn.utils.validation import _check_feature_names  # noqa: F401
+    from sklearn.utils.validation import (
+        _check_feature_names,  # noqa: F401
+        _check_n_features,  # noqa: F401
+        validate_data,  # noqa: F401
+    )
 
     # tags infrastructure
     @dataclass(**_dataclass_args())
