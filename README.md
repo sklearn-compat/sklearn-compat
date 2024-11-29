@@ -1,13 +1,27 @@
 # Ease multi-version support for scikit-learn compatible library
 
 [![SPEC 0 — Minimum Supported Dependencies](https://img.shields.io/badge/SPEC-0-green?labelColor=%23004811&color=%235CA038)](https://scientific-python.org/specs/spec-0000/)
+![GitHub Actions CI](https://github.com/sklearn-compat/sklearn-compat/actions/workflows/testing.yml/badge.svg)
+[![codecov](https://codecov.io/gh/sklearn-compat/sklearn-compat/graph/badge.svg?token=cndAFPqxhF)](https://codecov.io/gh/sklearn-compat/sklearn-compat)
+[![Python Version](https://img.shields.io/pypi/pyversions/sklearn-compat.svg)](https://img.shields.io/pypi/pyversions/sklearn-compat.svg)
+[![PyPI](https://badge.fury.io/py/sklearn-compat.svg)](https://badge.fury.io/py/imbalanced-learn.svg)
 
-`sklearn_compat` is a small Python package that allows you to support new
-scikit-learn features with older versions of scikit-learn.
+`sklearn-compat` is a small Python package that help developer writing scikit-learn
+compatible estimators to support multiple scikit-learn versions.
 
-The aim is to support a range of scikit-learn versions as specified in the
-[SPEC0](https://scientific-python.org/specs/spec-0000/). It means that you will find
-utility to support the last 4 released version of scikit-learn.
+As maintainers of third-party libraries depending on scikit-learn such as
+[`imbalanced-learn`](https://github.com/scikit-learn-contrib/imbalanced-learn),
+[`skrub`](https://github.com/skrub-data/skrub), or
+[`skops`](https://github.com/skops-dev/skops), we usually identified small breaking
+changes on the "private" developer utilities of `scikit-learn`. Indeed, each of these
+third-party libraries code the exact same utilities when it comes to support multiple
+`scikit-learn` versions. We therefore decided to factorize these utilities in a
+dedicated package that we update at each `scikit-learn` release.
+
+When it comes to support multiple `scikit-learn` versions, the initial plan as of
+December 2024 is to follow the [SPEC0](https://scientific-python.org/specs/spec-0000/)
+recommendations. It means that this utility will support the `scikit-learn` versions
+up to 2 years or about 4 versions.
 
 # How to adapt your scikit-learn code
 
