@@ -29,7 +29,7 @@ up to 2 years or about 4 versions.
 
 In this section, we describe succinctly the changes you need to do to your code to
 support multiple `scikit-learn` versions using `sklearn-compat` as a package. If you
-use the vendorable version of `sklearn-compat`, all imports will be changed from:
+use the vendored version of `sklearn-compat`, all imports will be changed from:
 
 ``` py
 from sklearn_compat.any_submodule import any_function
@@ -38,10 +38,10 @@ from sklearn_compat.any_submodule import any_function
 to
 
 ``` py
-from _sklearn_compat import any_function
+from path.to._sklearn_compat import any_function
 ```
 
-where `_sklearn_compat` is the vendorable version of `sklearn-compat` in your project.
+where `_sklearn_compat` is the vendored version of `sklearn-compat` in your project.
 
 ### Upgrading to scikit-learn 1.6
 
