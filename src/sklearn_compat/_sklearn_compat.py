@@ -11,6 +11,7 @@ Version: 0.1.0
 
 from __future__ import annotations
 
+import functools
 import platform
 import sys
 from dataclasses import dataclass, field
@@ -25,26 +26,6 @@ sklearn_version = parse_version(parse_version(sklearn.__version__).base_version)
 ########################################################################################
 # The following code does not depend on the sklearn version
 ########################################################################################
-
-
-# parameters validation
-class ParamsValidationMixin:
-    """Mixin class to validate parameters."""
-
-    def _validate_params(self):
-        """Validate types and values of constructor parameters.
-
-        The expected type and values must be defined in the `_parameter_constraints`
-        class attribute, which is a dictionary `param_name: list of constraints`. See
-        the docstring of `validate_parameter_constraints` for a description of the
-        accepted constraints.
-        """
-        if hasattr(self, "_parameter_constraints"):
-            validate_parameter_constraints(
-                self._parameter_constraints,
-                self.get_params(deep=False),
-                caller_name=self.__class__.__name__,
-            )
 
 
 # tags infrastructure
@@ -137,12 +118,88 @@ def _to_new_tags(old_tags, estimator=None):
         classifier_tags=classifier_tags,
         regressor_tags=regressor_tags,
         input_tags=input_tags,
-        array_api_support=old_tags["array_api_support"],
+        # Array-API was introduced in 1.3, we need to default to False if not inside
+        # the old-tags.
+        array_api_support=old_tags.get("array_api_support", False),
         no_validation=old_tags["no_validation"],
         non_deterministic=old_tags["non_deterministic"],
         requires_fit=old_tags["requires_fit"],
         _skip_test=old_tags["_skip_test"],
     )
+
+
+if sklearn_version >= parse_version("1.3"):
+    # parameter validation
+    class ParamsValidationMixin:
+        """Mixin class to validate parameters."""
+
+        def _validate_params(self):
+            """Validate types and values of constructor parameters.
+
+            The expected type and values must be defined in the `_parameter_constraints`
+            class attribute, which is a dictionary `param_name: list of constraints`. See
+            the docstring of `validate_parameter_constraints` for a description of the
+            accepted constraints.
+            """
+            if hasattr(self, "_parameter_constraints"):
+                validate_parameter_constraints(
+                    self._parameter_constraints,
+                    self.get_params(deep=False),
+                    caller_name=self.__class__.__name__,
+                )
+
+        from sklearn.base import _fit_context
+
+else:
+    # parameter validation
+    class ParamsValidationMixin:
+        """Mixin class to validate parameters.
+
+        For scikit-learn < 1.3, we do not provide any validation since the parameter
+        validation is not implemented as part of scikit-learn. We would need to backport
+        the infrastructure. Since this infrastructure required to look at the global
+        configuration of scikit-learn, we prefer to not interfere and just pass-by.
+        """
+
+        def _validate_params(self):
+            """No-op."""
+            pass
+
+    def _fit_context(*, prefer_skip_nested_validation):
+        """Decorator to run the fit methods of estimators within context managers.
+
+        With scikit-learn < 1.3, this decorator is no-op.
+
+        Parameters
+        ----------
+        prefer_skip_nested_validation : bool
+            If True, the validation of parameters of inner estimators or functions
+            called during fit will be skipped.
+
+            This is useful to avoid validating many times the parameters passed by the
+            user from the public facing API. It's also useful to avoid validating
+            parameters that we pass internally to inner functions that are guaranteed to
+            be valid by the test suite.
+
+            It should be set to True for most estimators, except for those that receive
+            non-validated objects as parameters, such as meta-estimators that are given
+            estimator objects.
+
+        Returns
+        -------
+        decorated_fit : method
+            The decorated fit method.
+        """
+
+        def decorator(fit_method):
+            @functools.wraps(fit_method)
+            def wrapper(estimator, *args, **kwargs):
+                estimator._validate_params()
+                return fit_method(estimator, *args, **kwargs)
+
+            return wrapper
+
+        return decorator
 
 
 ########################################################################################

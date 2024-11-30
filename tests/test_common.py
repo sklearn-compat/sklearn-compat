@@ -5,15 +5,16 @@ from sklearn.base import (
     ClassifierMixin,
     RegressorMixin,
     TransformerMixin,
-    _fit_context,
 )
 from sklearn.datasets import make_classification
 from sklearn.utils._param_validation import Integral, Interval, StrOptions
 from sklearn.utils.estimator_checks import parametrize_with_checks
+from sklearn.utils.fixes import parse_version
 from sklearn.utils.multiclass import check_classification_targets
 from sklearn.utils.validation import check_is_fitted
 
-from sklearn_compat.base import ParamsValidationMixin
+from sklearn_compat._sklearn_compat import sklearn_version
+from sklearn_compat.base import ParamsValidationMixin, _fit_context
 from sklearn_compat.utils.validation import validate_data
 
 
@@ -132,5 +133,9 @@ def test_parameter_validation():
     X, y = make_classification(n_samples=10, n_features=5, random_state=0)
     TestEstimator().fit(X, y)
     TestEstimator(param="a").fit(X, y)
-    with pytest.raises(ValueError, match="must be a str among"):
+    if sklearn_version < parse_version("1.3"):
+        # no-op but it should not crash
         TestEstimator(param="unknown").fit(X, y)
+    else:
+        with pytest.raises(ValueError, match="must be a str among"):
+            TestEstimator(param="unknown").fit(X, y)
