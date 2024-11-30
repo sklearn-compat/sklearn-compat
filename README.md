@@ -22,8 +22,9 @@ dedicated package that we update at each `scikit-learn` release.
 
 When it comes to support multiple `scikit-learn` versions, the initial plan as of
 December 2024 is to follow the [SPEC0](https://scientific-python.org/specs/spec-0000/)
-recommendations. It means that this utility will support the `scikit-learn` versions
-up to 2 years or about 4 versions.
+recommendations. It means that this utility will support **at least** the `scikit-learn`
+versions up to 2 years or about 4 versions. The current version of `sklearn-compat`
+supports `scikit-learn` >= 1.2.
 
 ## How to adapt your scikit-learn code
 
@@ -440,13 +441,18 @@ class MetaEstimator(BaseEstimator):
         return self
 ```
 
+#### Upgrading to scikit-learn 1.3
+
 ### Parameter validation
 
 scikit-learn introduced a new way to validate parameters at `fit` time. The recommended
 way to support this feature in scikit-learn 1.3+ is to inherit from
 `sklearn.base.BaseEstimator` and decorate the `fit` method using the decorator
-`sklearn.base._fit_context`. In this package, we provide a mixin class in case you
-don't want to inherit from `sklearn.base.BaseEstimator`.
+`sklearn.base._fit_context`.
+
+We provide the function `sklearn_compat.base._fit_context` such that you can always
+decorate the `fit` method of your estimator. However, with scikit-learn version < 1.3,
+this decorator is a no-op. The same goes for the `ParamsValidationMixin` mixin class.
 
 So a small example could have been in the past:
 
@@ -464,7 +470,7 @@ class MyEstimator:
 becomes:
 
 ``` py
-from sklearn_compat.base import ParamsValidationMixin
+from sklearn_compat.base import ParamsValidationMixin, _fit_context
 
 class MyEstimator(ParamsValidationMixin):
     _parameter_constraints = {"a": [Interval(Integral, 0, None, closed="left")]}
