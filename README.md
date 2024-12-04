@@ -126,6 +126,15 @@ tags = get_tags(MyEstimator())
 
 Which uses `sklearn.utils.get_tags` under the hood from scikit-learn 1.6+.
 
+#### `check_estimator` and `parametrize_with_checks` functions
+
+The new tags don't include a `_xfail_checks` tags, and instead, the tests which are
+expected to fail are directly passed to the `check_estimator` and
+`parametrize_with_checks` functions. The two functions available in this package are
+compatible with the new signature, and patch the estimator in older scikit-learn
+versions to include the expected failed checks in their tags so that you don't need
+to include them both in your tests and in your `_xfail_checks` old tags.
+
 ### Upgrading to scikit-learn 1.5
 
 In scikit-learn 1.5, many developer utilities have been moved to dedicated modules.
