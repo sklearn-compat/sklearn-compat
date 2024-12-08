@@ -135,6 +135,25 @@ compatible with the new signature, and patch the estimator in older scikit-learn
 versions to include the expected failed checks in their tags so that you don't need
 to include them both in your tests and in your `_xfail_checks` old tags.
 
+
+``` py
+from sklearn_compat.utils.testing import parametrize_with_checks
+from mypackage.myestimator import MyEstimator1, MyEstimator2
+
+EXPECTED_FAILED_CHECKS = {
+    "MyEstimator1": {"check_name1": "reason1", "check_name2": "reason2"},
+    "MyEstimator2": {"check_name3": "reason3"},
+}
+
+@parametrize_with_checks([MyEstimator1(), MyEstimator2()],
+                        expected_failed_checks=lambda est: EXPECTED_FAILED_CHECKS.get(
+                            est.__class__.__name__, {}
+                        )
+)
+def test_my_estimator(estimator, check):
+    check(estimator)
+```
+
 ### Upgrading to scikit-learn 1.5
 
 In scikit-learn 1.5, many developer utilities have been moved to dedicated modules.
