@@ -171,6 +171,19 @@ safe_sqr(np.array([1, 2, 3]))
 _approximate_mode(class_counts=np.array([4, 2]), n_draws=3, rng=0)
 ```
 
+#### `type_of_target` function
+
+The function `type_of_target` accepts a new parameter `raise_unknown`. This parameter is
+available in the `sklearn_compat.utils.multiclass.type_of_target` function.
+
+```py
+from sklearn_compat.utils.multiclass import type_of_target
+
+y = []
+# raise an error with unknown target type
+type_of_target(y, raise_unknown=True)
+```
+
 #### `fixes` module
 
 The functions `_in_unstable_openblas_configuration`, `_IS_32BIT` and `_IS_WASM` have
