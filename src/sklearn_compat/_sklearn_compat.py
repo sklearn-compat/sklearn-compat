@@ -128,6 +128,10 @@ def _to_new_tags(old_tags, estimator=None):
     )
 
 
+########################################################################################
+# Upgrading for scikit-learn 1.3
+########################################################################################
+
 if sklearn_version < parse_version("1.3"):
     # parameter validation
     class ParamsValidationMixin:
