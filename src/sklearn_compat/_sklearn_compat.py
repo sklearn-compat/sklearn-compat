@@ -14,6 +14,7 @@ from __future__ import annotations
 import platform
 import sys
 from dataclasses import dataclass, field
+from typing import Callable, Literal
 
 import sklearn
 from sklearn.utils._param_validation import validate_parameter_constraints
@@ -566,6 +567,54 @@ if sklearn_version < parse_version("1.6"):
         _skip_test: bool = False
         input_tags: InputTags = field(default_factory=InputTags)
 
+    def _patched_more_tags(estimator, expected_failed_checks):
+        import copy
+
+        from sklearn.utils._tags import _safe_tags
+
+        original_tags = copy.deepcopy(_safe_tags(estimator))
+
+        def patched_more_tags(self):
+            original_tags.update({"_xfail_checks": expected_failed_checks})
+            return original_tags
+
+        estimator.__class__._more_tags = patched_more_tags
+        return estimator
+
+    def check_estimator(
+        estimator=None,
+        generate_only=False,
+        *,
+        legacy: bool = True,
+        expected_failed_checks: dict[str, str] | None = None,
+        on_skip: Literal["warn"] | None = "warn",
+        on_fail: Literal["raise", "warn"] | None = "raise",
+        callback: Callable | None = None,
+    ):
+        # legacy, on_skip, on_fail, and callback are not supported and ignored
+        from sklearn.utils.estimator_checks import check_estimator
+
+        return check_estimator(
+            _patched_more_tags(estimator, expected_failed_checks),
+            generate_only=generate_only,
+        )
+
+    def parametrize_with_checks(
+        estimators,
+        *,
+        legacy: bool = True,
+        expected_failed_checks: Callable | None = None,
+    ):
+        # legacy is not supported and ignored
+        from sklearn.utils.estimator_checks import parametrize_with_checks
+
+        estimators = [
+            _patched_more_tags(estimator, expected_failed_checks(estimator))
+            for estimator in estimators
+        ]
+
+        return parametrize_with_checks(estimators)
+
 else:
     # test_common
     # tags infrastructure
@@ -579,6 +628,10 @@ else:
     )
     from sklearn.utils._test_common.instance_generator import (
         _construct_instances,  # noqa: F401
+    )
+    from sklearn.utils.estimator_checks import (
+        check_estimator,  # noqa: F401
+        parametrize_with_checks,  # noqa: F401
     )
     from sklearn.utils.multiclass import type_of_target  # noqa: F401
 
