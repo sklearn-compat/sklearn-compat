@@ -14,7 +14,7 @@ from sklearn.utils.multiclass import check_classification_targets
 from sklearn.utils.validation import check_is_fitted
 
 from sklearn_compat._sklearn_compat import sklearn_version
-from sklearn_compat.base import ParamsValidationMixin, _fit_context
+from sklearn_compat.base import _fit_context
 from sklearn_compat.utils.validation import validate_data
 
 
@@ -90,6 +90,7 @@ class Transformer(TransformerMixin, BaseEstimator):
         self.with_mean = with_mean
         self.with_std = with_std
 
+    @_fit_context(prefer_skip_nested_validation=True)
     def fit(self, X, y=None):
         X = validate_data(self, X=X)
         self.mean_ = X.mean() if self.with_mean else 0
@@ -110,32 +111,3 @@ class Transformer(TransformerMixin, BaseEstimator):
 )
 def test_basic_estimator(estimator, check):
     return check(estimator)
-
-
-def test_parameter_validation():
-    class TestEstimator(ParamsValidationMixin):
-        """Estimator to which we apply parameter validation through the mixin."""
-
-        _parameter_constraints = {
-            "param": [StrOptions({"a", "b", "c"}), None],
-        }
-
-        def __init__(self, param=None):
-            self.param = param
-
-        @_fit_context(prefer_skip_nested_validation=True)
-        def fit(self, X, y=None):
-            return self
-
-        def get_params(self, deep=True):
-            return {"param": self.param}
-
-    X, y = make_classification(n_samples=10, n_features=5, random_state=0)
-    TestEstimator().fit(X, y)
-    TestEstimator(param="a").fit(X, y)
-    if sklearn_version < parse_version("1.3"):
-        # no-op but it should not crash
-        TestEstimator(param="unknown").fit(X, y)
-    else:
-        with pytest.raises(ValueError, match="must be a str among"):
-            TestEstimator(param="unknown").fit(X, y)

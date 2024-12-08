@@ -492,41 +492,7 @@ way to support this feature in scikit-learn 1.3+ is to inherit from
 `sklearn.base._fit_context`.
 
 We provide the function `sklearn_compat.base._fit_context` such that you can always
-decorate the `fit` method of your estimator. However, with scikit-learn version < 1.3,
-this decorator is a no-op. The same goes for the `ParamsValidationMixin` mixin class.
-
-So a small example could have been in the past:
-
-``` py
-class MyEstimator:
-    def __init__(self, a=1):
-        self.a = a
-
-    def fit(self, X, y=None):
-        if self.a < 0:
-            raise ValueError("a must be positive")
-        return self
-```
-
-becomes:
-
-``` py
-from sklearn_compat.base import ParamsValidationMixin, _fit_context
-
-class MyEstimator(ParamsValidationMixin):
-    _parameter_constraints = {"a": [Interval(Integral, 0, None, closed="left")]}
-
-    def __init__(self, a=1):
-        self.a = a
-
-    @_fit_context(prefer_skip_nested_validation=True)
-    def fit(self, X, y=None):
-        return self
-```
-
-The advantage is that the error raised will be more informative and consistent across
-estimators. Also, we have the possibility to skip the validation of the parameters when
-using this estimator as a meta-estimator.
+decorate the `fit` method of your estimator.
 
 ## Contributing
 

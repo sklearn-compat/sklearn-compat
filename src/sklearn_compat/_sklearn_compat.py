@@ -135,19 +135,6 @@ def _to_new_tags(old_tags, estimator=None):
 
 if sklearn_version < parse_version("1.3"):
     # parameter validation
-    class ParamsValidationMixin:
-        """Mixin class to validate parameters.
-
-        For scikit-learn < 1.3, we do not provide any validation since the parameter
-        validation is not implemented as part of scikit-learn. We would need to backport
-        the infrastructure. Since this infrastructure required to look at the global
-        configuration of scikit-learn, we prefer to not interfere and just pass-by.
-        """
-
-        def _validate_params(self):
-            """No-op."""
-            pass
-
     def _fit_context(*, prefer_skip_nested_validation):
         """Decorator to run the fit methods of estimators within context managers.
 
@@ -185,23 +172,6 @@ if sklearn_version < parse_version("1.3"):
         return decorator
 else:
     # parameter validation
-    class ParamsValidationMixin:
-        """Mixin class to validate parameters."""
-
-        def _validate_params(self):
-            """Validate types and values of constructor parameters.
-
-            The expected type and values must be defined in the `_parameter_constraints`
-            class attribute, which is a dictionary `param_name: list of constraints`. See
-            the docstring of `validate_parameter_constraints` for a description of the
-            accepted constraints.
-            """
-            if hasattr(self, "_parameter_constraints"):
-                validate_parameter_constraints(
-                    self._parameter_constraints,
-                    self.get_params(deep=False),
-                    caller_name=self.__class__.__name__,
-                )
 
     from sklearn.base import _fit_context  # noqa: F401
 
