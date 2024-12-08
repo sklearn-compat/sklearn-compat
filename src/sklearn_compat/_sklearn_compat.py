@@ -550,7 +550,7 @@ if sklearn_version < parse_version("1.6"):
         _skip_test: bool = False
         input_tags: InputTags = field(default_factory=InputTags)
 
-    def patched_more_tags(estimator, expected_failed_checks):
+    def _patched_more_tags(estimator, expected_failed_checks):
         import copy
 
         from sklearn.utils._tags import _safe_tags
@@ -578,7 +578,7 @@ if sklearn_version < parse_version("1.6"):
         from sklearn.utils.estimator_checks import check_estimator
 
         return check_estimator(
-            patched_more_tags(estimator, expected_failed_checks),
+            _patched_more_tags(estimator, expected_failed_checks),
             generate_only=generate_only,
         )
 
@@ -592,7 +592,7 @@ if sklearn_version < parse_version("1.6"):
         from sklearn.utils.estimator_checks import parametrize_with_checks
 
         estimators = [
-            patched_more_tags(estimator, expected_failed_checks(estimator))
+            _patched_more_tags(estimator, expected_failed_checks(estimator))
             for estimator in estimators
         ]
 
