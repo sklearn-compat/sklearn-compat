@@ -304,6 +304,23 @@ if sklearn_version < parse_version("1.6"):
     # test_common
     from sklearn.utils.estimator_checks import _construct_instance
 
+    def type_of_target(y, input_name="", *, raise_unknown=False):
+        # fix for raise_unknown which is introduced in scikit-learn 1.6
+        from sklearn.utils.multiclass import type_of_target
+
+        def _raise_or_return(target_type):
+            """Depending on the value of raise_unknown, either raise an error or
+            return 'unknown'.
+            """
+            if raise_unknown and target_type == "unknown":
+                input = input_name if input_name else "data"
+                raise ValueError(f"Unknown label type for {input}: {y!r}")
+            else:
+                return target_type
+
+        target_type = type_of_target(y, input_name=input_name)
+        return _raise_or_return(target_type)
+
     def _construct_instances(Estimator):
         yield _construct_instance(Estimator)
 
@@ -616,6 +633,7 @@ else:
         check_estimator,  # noqa: F401
         parametrize_with_checks,  # noqa: F401
     )
+    from sklearn.utils.multiclass import type_of_target  # noqa: F401
 
     # validation
     from sklearn.utils.validation import (
