@@ -1,1 +1,3 @@
-from sklearn_compat._sklearn_compat import ParamsValidationMixin  # noqa: F401
+from sklearn_compat._sklearn_compat import (
+    _fit_context,  # noqa: F401
+)
