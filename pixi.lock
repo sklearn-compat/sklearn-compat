@@ -1102,7 +1102,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/pytz-2024.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/pyyaml-6.0.2-py313h536fd9c_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/readline-8.2-h8228510_1.conda
-      - conda: https://conda.anaconda.org/conda-forge/label/scikit-learn_rc/linux-64/scikit-learn-1.6.0rc1-py313h55ffb2e_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/scikit-learn-1.6.0-py313h8ef605b_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.14.1-py313h27c5614_2.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/setuptools-75.6.0-pyhff2d567_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/six-1.17.0-pyhd8ed1ab_0.conda
@@ -1163,7 +1163,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/pytz-2024.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/pyyaml-6.0.2-py313ha37c0e0_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/readline-8.2-h9e318b2_1.conda
-      - conda: https://conda.anaconda.org/conda-forge/label/scikit-learn_rc/osx-64/scikit-learn-1.6.0rc1-py313ha51e95c_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-64/scikit-learn-1.6.0-py313hedeaec8_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/scipy-1.14.1-py313hd641537_2.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/setuptools-75.6.0-pyhff2d567_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/six-1.17.0-pyhd8ed1ab_0.conda
@@ -1224,7 +1224,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/pytz-2024.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/pyyaml-6.0.2-py313h20a7fcf_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/readline-8.2-h92ec313_1.conda
-      - conda: https://conda.anaconda.org/conda-forge/label/scikit-learn_rc/osx-arm64/scikit-learn-1.6.0rc1-py313h59e23dd_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/scikit-learn-1.6.0-py313hecba28c_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/scipy-1.14.1-py313hc010ede_2.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/setuptools-75.6.0-pyhff2d567_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/six-1.17.0-pyhd8ed1ab_0.conda
@@ -1284,7 +1284,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/win-64/python_abi-3.13-5_cp313.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/pytz-2024.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/pyyaml-6.0.2-py313ha7868ed_1.conda
-      - conda: https://conda.anaconda.org/conda-forge/label/scikit-learn_rc/win-64/scikit-learn-1.6.0rc1-py313h84293e3_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/win-64/scikit-learn-1.6.0-py313h4f67946_0.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/scipy-1.14.1-py313h16bbbb2_2.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/setuptools-75.6.0-pyhff2d567_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/six-1.17.0-pyhd8ed1ab_0.conda
@@ -6588,6 +6588,28 @@ packages:
   - pkg:pypi/scikit-learn?source=hash-mapping
   size: 10497980
   timestamp: 1726083319119
+- conda: https://conda.anaconda.org/conda-forge/linux-64/scikit-learn-1.6.0-py313h8ef605b_0.conda
+  sha256: 8c56beae5f7561617515b230c3f27b3afa4a6de41c4acc5b83b96c12d98cbe81
+  md5: 0aa8e3b9e1818cc2e976f74959c8cdb9
+  depends:
+  - __glibc >=2.17,<3.0.a0
+  - _openmp_mutex >=4.5
+  - joblib >=1.2.0
+  - libgcc >=13
+  - libstdcxx >=13
+  - numpy >=1.21,<3
+  - python >=3.13,<3.14.0a0
+  - python_abi 3.13.* *_cp313
+  - scipy
+  - threadpoolctl >=3.1.0
+  arch: x86_64
+  platform: linux
+  license: BSD-3-Clause
+  license_family: BSD
+  purls:
+  - pkg:pypi/scikit-learn?source=hash-mapping
+  size: 10561945
+  timestamp: 1733760738073
 - conda: https://conda.anaconda.org/conda-forge/osx-64/scikit-learn-1.2.2-py311h83feae1_2.conda
   sha256: cff7ad1966189cb6a04bb269e6516cbc697879f144386b955c748ba55d095b16
   md5: 7b03abbddd44afb3387ebe717516911d
@@ -6673,6 +6695,27 @@ packages:
   - pkg:pypi/scikit-learn?source=hash-mapping
   size: 9562359
   timestamp: 1726083153919
+- conda: https://conda.anaconda.org/conda-forge/osx-64/scikit-learn-1.6.0-py313hedeaec8_0.conda
+  sha256: a7da791b0448dd1df77478b80f3fad28f1883e2570550da6b95bbad71d3349d0
+  md5: 6c3bc88eea1e68b6ba721c0d44b16d6e
+  depends:
+  - __osx >=10.13
+  - joblib >=1.2.0
+  - libcxx >=18
+  - llvm-openmp >=18.1.8
+  - numpy >=1.21,<3
+  - python >=3.13,<3.14.0a0
+  - python_abi 3.13.* *_cp313
+  - scipy
+  - threadpoolctl >=3.1.0
+  arch: x86_64
+  platform: osx
+  license: BSD-3-Clause
+  license_family: BSD
+  purls:
+  - pkg:pypi/scikit-learn?source=hash-mapping
+  size: 9632081
+  timestamp: 1733760701603
 - conda: https://conda.anaconda.org/conda-forge/osx-arm64/scikit-learn-1.2.2-py311hf0b18b8_2.conda
   sha256: 4d6a02ed8a63577714d724b57c7fee1739891dca097bdd93820597526e7b024a
   md5: f76e6982d1e808fd7449fc57dba63830
@@ -6762,6 +6805,28 @@ packages:
   - pkg:pypi/scikit-learn?source=hash-mapping
   size: 9628543
   timestamp: 1726083310026
+- conda: https://conda.anaconda.org/conda-forge/osx-arm64/scikit-learn-1.6.0-py313hecba28c_0.conda
+  sha256: 0540c241a4c5776bb3ccc7c7b372c14f4861a604b70768a86898c451d4f7ed10
+  md5: 3d961f7e748ac2f14bb60b1a7b48a1d1
+  depends:
+  - __osx >=11.0
+  - joblib >=1.2.0
+  - libcxx >=18
+  - llvm-openmp >=18.1.8
+  - numpy >=1.21,<3
+  - python >=3.13,<3.14.0a0
+  - python >=3.13,<3.14.0a0 *_cp313
+  - python_abi 3.13.* *_cp313
+  - scipy
+  - threadpoolctl >=3.1.0
+  arch: arm64
+  platform: osx
+  license: BSD-3-Clause
+  license_family: BSD
+  purls:
+  - pkg:pypi/scikit-learn?source=hash-mapping
+  size: 9772810
+  timestamp: 1733760897225
 - conda: https://conda.anaconda.org/conda-forge/win-64/scikit-learn-1.2.2-py311h142b183_2.conda
   sha256: 170b2e1698f364e4eb665eabd211a76aa0bbc4c57327cd0e65b08bb770372979
   md5: f5e51c7f8a51cc7348f450d33b5c57b2
@@ -6846,6 +6911,27 @@ packages:
   - pkg:pypi/scikit-learn?source=hash-mapping
   size: 9331778
   timestamp: 1726083562938
+- conda: https://conda.anaconda.org/conda-forge/win-64/scikit-learn-1.6.0-py313h4f67946_0.conda
+  sha256: 5b904b579b12cfe1a62e491e8cc54d420d6feda490eb15f81de1b291d9973d4d
+  md5: ed0e7092d3337b50e79046659d73cf2a
+  depends:
+  - joblib >=1.2.0
+  - numpy >=1.21,<3
+  - python >=3.13,<3.14.0a0
+  - python_abi 3.13.* *_cp313
+  - scipy
+  - threadpoolctl >=3.1.0
+  - ucrt >=10.0.20348.0
+  - vc >=14.2,<15
+  - vc14_runtime >=14.29.30139
+  arch: x86_64
+  platform: win
+  license: BSD-3-Clause
+  license_family: BSD
+  purls:
+  - pkg:pypi/scikit-learn?source=hash-mapping
+  size: 9485378
+  timestamp: 1733761009564
 - conda: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.14.1-py311he9a78e4_2.conda
   sha256: b28d91a55205b886308da82428cd522e9dce0ef912445a2e9d89318379c15759
   md5: c4aee8cadc4c9fc9a91aca0803473690
@@ -7162,7 +7248,7 @@ packages:
 - pypi: .
   name: sklearn-compat
   version: 0.1.0
-  sha256: faabb150f2ce74ad3e0f44ea94ba7012618f4be5473565786fd77e5e5df71fee
+  sha256: 355565088de08f2fd8f3578860ce59f11fbe4f190dd1632bd9f83a6b7a0fbb62
   requires_dist:
   - scikit-learn>1.2,<1.7
   - ipython ; extra == 'dev'
