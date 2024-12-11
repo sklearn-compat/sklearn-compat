@@ -7247,10 +7247,10 @@ packages:
   timestamp: 1733381032766
 - pypi: .
   name: sklearn-compat
-  version: 0.1.0
-  sha256: 355565088de08f2fd8f3578860ce59f11fbe4f190dd1632bd9f83a6b7a0fbb62
+  version: 0.1.1
+  sha256: e075bc475764728db7649943e9377fc171c22d9d4b2e4f30a493e072c916446a
   requires_dist:
-  - scikit-learn>1.2,<1.7
+  - scikit-learn>=1.2,<1.7
   - ipython ; extra == 'dev'
   - mkdocs ; extra == 'docs'
   - mkdocs-material ; extra == 'docs'
