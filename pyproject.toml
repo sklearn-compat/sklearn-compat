@@ -71,6 +71,7 @@ sklearn_compat = { path = ".", editable = true }
 [tool.pixi.feature.docs.dependencies]
 mkdocs = "*"
 mkdocs-material = "*"
+
 [tool.pixi.feature.tests.dependencies]
 pandas = "*"
 pytz = "*"
@@ -97,7 +98,7 @@ scikit-learn = { version = "~=1.4.0", channel = "conda-forge" }
 scikit-learn = { version = "~=1.5.0", channel = "conda-forge" }
 
 [tool.pixi.feature.sklearn16.dependencies]
-scikit-learn = { version = "*", channel = "conda-forge/label/scikit-learn_rc" }
+scikit-learn = { version = "~=1.6.0", channel = "conda-forge" }
 
 [tool.pixi.feature.lint.tasks]
 lint = { cmd = "pre-commit install && pre-commit run -v --all-files --show-diff-on-failure" }
