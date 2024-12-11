@@ -9,7 +9,9 @@
 `sklearn-compat` is a small Python package that help developer writing scikit-learn
 compatible estimators to support multiple scikit-learn versions. Note that we provide
 a vendorable version of this package in the `src/sklearn_compat/_sklearn_compat.py`
-file if you do not want to depend on `sklearn-compat` as a package.
+file if you do not want to depend on `sklearn-compat` as a package. The package is
+available on [PyPI](https://pypi.org/project/sklearn-compat/) and on
+[conda-forge](https://anaconda.org/conda-forge/sklearn-compat).
 
 As maintainers of third-party libraries depending on scikit-learn such as
 [`imbalanced-learn`](https://github.com/scikit-learn-contrib/imbalanced-learn),
