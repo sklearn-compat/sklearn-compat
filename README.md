@@ -135,12 +135,15 @@ In case you want to extend the tags, you can inherit from the available tags:
 from sklearn_compat.utils._tags import Tags, InputTags
 
 class MyInputTags(InputTags):
-    dataframe: bool = True
+    dataframe: bool = False
 
 class MyEstimator(BaseEstimator):
     def __sklearn_tags__(self):
         tags = super().__sklearn_tags__()
-        tags.input_tags = MyInputTags()
+        tags.input_tags = MyInputTags(
+            category=True,
+            dataframe=True,
+        )
         return tags
 ```
 
