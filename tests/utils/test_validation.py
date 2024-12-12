@@ -7,8 +7,16 @@ from sklearn_compat.utils.validation import (
     _check_n_features,
     _is_fitted,
     _to_object_array,
+    check_array,
     validate_data,
 )
+
+
+def test_check_array_ensure_all_finite():
+    X = [[1, 2, 3, np.nan]]
+    with pytest.raises(ValueError, match="contains NaN"):
+        check_array(X, ensure_all_finite=True)
+    assert isinstance(check_array(X, ensure_all_finite=False), np.ndarray)
 
 
 @pytest.mark.parametrize("ensure_all_finite", [True, False])
