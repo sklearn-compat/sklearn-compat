@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.utils._testing import _convert_container
 
 from sklearn_compat.utils.validation import (
     _check_feature_names,
@@ -38,6 +39,28 @@ def test_validate_data(ensure_all_finite):
             est.fit_transform(X)
     else:
         assert isinstance(est.fit_transform(X), np.ndarray)
+
+
+@pytest.mark.parametrize("container_type", ["list", "dataframe"])
+def test_validate_data_skip_check_array(container_type):
+    class MyEstimator(TransformerMixin, BaseEstimator):
+        def fit(self, X, y=None):
+            X = validate_data(self, X=X, y=y, skip_check_array=True)
+            return self
+
+        def transform(self, X):
+            X = validate_data(self, X=X, skip_check_array=True)
+            return X
+
+    X = _convert_container(
+        [[1, 2, 3, 4]], container_type, columns_name=["a", "b", "c", "d"]
+    )
+    est = MyEstimator()
+    X_trans = est.fit_transform(X)
+    assert isinstance(X_trans, type(X))
+    assert est.n_features_in_ == 4
+    if container_type == "dataframe":
+        np.testing.assert_array_equal(est.feature_names_in_, ["a", "b", "c", "d"])
 
 
 def test_check_n_features():

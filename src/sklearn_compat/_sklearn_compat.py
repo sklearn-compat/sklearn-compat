@@ -170,6 +170,7 @@ if sklearn_version < parse_version("1.3"):
             return wrapper
 
         return decorator
+
 else:
     # parameter validation
 
@@ -355,17 +356,167 @@ if sklearn_version < parse_version("1.6"):
         yield _construct_instance(Estimator)
 
     # validation
-    def validate_data(_estimator, /, **kwargs):
-        if "ensure_all_finite" in kwargs:
-            force_all_finite = kwargs.pop("ensure_all_finite")
+    def validate_data(
+        _estimator,
+        /,
+        X="no_validation",
+        y="no_validation",
+        reset=True,
+        validate_separately=False,
+        skip_check_array=False,
+        **kwargs,
+    ):
+        """Validate input data and set or check feature names and counts of the input.
+
+        This helper function should be used in an estimator that requires input
+        validation. This mutates the estimator and sets the `n_features_in_` and
+        `feature_names_in_` attributes if `reset=True`.
+
+        Parameters
+        ----------
+        _estimator : estimator instance
+            The estimator to validate the input for.
+
+        X : {array-like, sparse matrix, dataframe} of shape \
+                (n_samples, n_features), default='no validation'
+            The input samples.
+            If `'no_validation'`, no validation is performed on `X`. This is
+            useful for meta-estimator which can delegate input validation to
+            their underlying estimator(s). In that case `y` must be passed and
+            the only accepted `check_params` are `multi_output` and
+            `y_numeric`.
+
+        y : array-like of shape (n_samples,), default='no_validation'
+            The targets.
+
+            - If `None`, :func:`~sklearn.utils.check_array` is called on `X`. If
+              the estimator's `requires_y` tag is True, then an error will be raised.
+            - If `'no_validation'`, :func:`~sklearn.utils.check_array` is called
+              on `X` and the estimator's `requires_y` tag is ignored. This is a default
+              placeholder and is never meant to be explicitly set. In that case `X` must
+              be passed.
+            - Otherwise, only `y` with `_check_y` or both `X` and `y` are checked with
+              either :func:`~sklearn.utils.check_array` or
+              :func:`~sklearn.utils.check_X_y` depending on `validate_separately`.
+
+        reset : bool, default=True
+            Whether to reset the `n_features_in_` attribute.
+            If False, the input will be checked for consistency with data
+            provided when reset was last True.
+
+            .. note::
+
+            It is recommended to call `reset=True` in `fit` and in the first
+            call to `partial_fit`. All other methods that validate `X`
+            should set `reset=False`.
+
+        validate_separately : False or tuple of dicts, default=False
+            Only used if `y` is not `None`.
+            If `False`, call :func:`~sklearn.utils.check_X_y`. Else, it must be a tuple
+            of kwargs to be used for calling :func:`~sklearn.utils.check_array` on `X`
+            and `y` respectively.
+
+            `estimator=self` is automatically added to these dicts to generate
+            more informative error message in case of invalid input data.
+
+        skip_check_array : bool, default=False
+            If `True`, `X` and `y` are unchanged and only `feature_names_in_` and
+            `n_features_in_` are checked. Otherwise, :func:`~sklearn.utils.check_array`
+            is called on `X` and `y`.
+
+        **check_params : kwargs
+            Parameters passed to :func:`~sklearn.utils.check_array` or
+            :func:`~sklearn.utils.check_X_y`. Ignored if validate_separately
+            is not False.
+
+            `estimator=self` is automatically added to these params to generate
+            more informative error message in case of invalid input data.
+
+        Returns
+        -------
+        out : {ndarray, sparse matrix} or tuple of these
+            The validated input. A tuple is returned if both `X` and `y` are
+            validated.
+        """
+        if skip_check_array:
+            _check_n_features(_estimator, X, reset=reset)
+            _check_feature_names(_estimator, X, reset=reset)
+
+            no_val_X = isinstance(X, str) and X == "no_validation"
+            no_val_y = y is None or isinstance(y, str) and y == "no_validation"
+            if not no_val_X and no_val_y:
+                out = X
+            elif no_val_X and not no_val_y:
+                out = y
+            else:
+                out = X, y
+            return out
         else:
-            force_all_finite = True
-        return _estimator._validate_data(**kwargs, force_all_finite=force_all_finite)
+            if "ensure_all_finite" in kwargs:
+                force_all_finite = kwargs.pop("ensure_all_finite")
+            else:
+                force_all_finite = True
+            return _estimator._validate_data(
+                X=X,
+                y=y,
+                reset=reset,
+                validate_separately=validate_separately,
+                force_all_finite=force_all_finite,
+                **kwargs,
+            )
 
     def _check_n_features(estimator, X, *, reset):
+        """Set the `n_features_in_` attribute, or check against it on an estimator.
+
+        Parameters
+        ----------
+        estimator : estimator instance
+            The estimator to validate the input for.
+
+        X : {ndarray, sparse matrix} of shape (n_samples, n_features)
+            The input samples.
+
+        reset : bool
+            If True, the `n_features_in_` attribute is set to `X.shape[1]`.
+            If False and the attribute exists, then check that it is equal to
+            `X.shape[1]`. If False and the attribute does *not* exist, then
+            the check is skipped.
+
+            .. note::
+               It is recommended to call reset=True in `fit` and in the first
+               call to `partial_fit`. All other methods that validate `X`
+               should set `reset=False`.
+        """
         return estimator._check_n_features(X, reset=reset)
 
     def _check_feature_names(estimator, X, *, reset):
+        """Check `input_features` and generate names if needed.
+
+        Commonly used in :term:`get_feature_names_out`.
+
+        Parameters
+        ----------
+        input_features : array-like of str or None, default=None
+            Input features.
+
+            - If `input_features` is `None`, then `feature_names_in_` is
+              used as feature names in. If `feature_names_in_` is not defined,
+              then the following input feature names are generated:
+              `["x0", "x1", ..., "x(n_features_in_ - 1)"]`.
+            - If `input_features` is an array-like, then `input_features` must
+              match `feature_names_in_` if `feature_names_in_` is defined.
+
+        generate_names : bool, default=True
+            Whether to generate names when `input_features` is `None` and
+            `estimator.feature_names_in_` is not defined. This is useful for
+            transformers that validates `input_features` but do not require them in
+            :term:`get_feature_names_out` e.g. `PCA`.
+
+        Returns
+        -------
+        feature_names_in : ndarray of str or `None`
+            Feature names in.
+        """
         return estimator._check_feature_names(X, reset=reset)
 
     # tags infrastructure
