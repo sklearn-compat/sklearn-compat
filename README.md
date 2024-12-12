@@ -129,6 +129,23 @@ tags = get_tags(MyEstimator())
 
 Which uses `sklearn.utils.get_tags` under the hood from scikit-learn 1.6+.
 
+In case, that you want to extend the tags a given tags, you can inherit from the
+available tags:
+
+```py
+from sklearn_compat.utils._tags import Tags, InputTags
+
+class MyInputTags(InputTags):
+    dataframe: bool = True
+
+class MyEstimator(BaseEstimator):
+    def __sklearn_tags__(self):
+        tags = super().__sklearn_tags__()
+        tags.input_tags = MyInputTags()
+        return tags
+```
+
+
 #### `check_estimator` and `parametrize_with_checks` functions
 
 The new tags don't include a `_xfail_checks` tags, and instead, the tests which are
