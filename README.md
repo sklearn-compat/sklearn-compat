@@ -129,8 +129,7 @@ tags = get_tags(MyEstimator())
 
 Which uses `sklearn.utils.get_tags` under the hood from scikit-learn 1.6+.
 
-In case, that you want to extend the tags a given tags, you can inherit from the
-available tags:
+In case you want to extend the tags, you can inherit from the available tags:
 
 ```py
 from sklearn_compat.utils._tags import Tags, InputTags
