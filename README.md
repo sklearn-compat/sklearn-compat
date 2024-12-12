@@ -101,6 +101,9 @@ class MyEstimator(BaseEstimator):
         return self
 ```
 
+Note that it is best to call `validate_data` with `skip_check_array=True` instead of
+calling these private functions. See the section above regarding `validate_data`.
+
 #### `Tags`, `__sklearn_tags__` and estimator tags
 
 The estimator tags infrastructure in scikit-learn 1.6 has changed. In order to be
