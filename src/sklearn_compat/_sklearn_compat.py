@@ -403,6 +403,8 @@ if sklearn_version < parse_version("1.6"):
         kwargs = {}
         if "force_writeable" in check_array_params:
             kwargs["force_writeable"] = force_writeable
+        if "ensure_non_negative" in check_array_params:
+            kwargs["ensure_non_negative"] = ensure_non_negative
 
         return _check_array(
             array,
@@ -412,7 +414,6 @@ if sklearn_version < parse_version("1.6"):
             order=order,
             copy=copy,
             force_all_finite=force_all_finite,
-            ensure_non_negative=ensure_non_negative,
             ensure_2d=ensure_2d,
             allow_nd=allow_nd,
             ensure_min_samples=ensure_min_samples,
