@@ -82,7 +82,7 @@ parameter. You need to modify the call to the function to use the new parameter.
 the change is the same as for `validate_data` and will look like this:
 
 ``` py
-from sklearn_compat.utils.validation import check_array
+from sklearn.utils.validation import check_array
 
 check_array(X, force_all_finite=True)
 ```
