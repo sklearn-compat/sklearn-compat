@@ -141,8 +141,16 @@ class MyEstimator(BaseEstimator):
     def __sklearn_tags__(self):
         tags = super().__sklearn_tags__()
         tags.input_tags = MyInputTags(
+            one_d_array=tags.input_tags.one_d_array,
+            two_d_array=tags.input_tags.two_d_array,
+            sparse=tags.input_tags.sparse,
             category=True,
             dataframe=True,
+            string=tags.input_tags.string,
+            dict=tags.input_tags.dict,
+            positive_only=tags.input_tags.positive_only,
+            allow_nan=tags.input_tags.allow_nan,
+            pairwise=tags.input_tags.pairwise,
         )
         return tags
 ```
