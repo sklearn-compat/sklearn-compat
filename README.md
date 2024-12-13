@@ -90,6 +90,8 @@ check_array(X, force_all_finite=True)
 to:
 
 ``` py
+from sklearn_compat.utils.validation import check_array
+
 check_array(X, ensure_all_finite=True)
 ```
 
