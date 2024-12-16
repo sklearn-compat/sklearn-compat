@@ -75,6 +75,26 @@ class MyEstimator(BaseEstimator):
         return self
 ```
 
+#### `check_array` function
+
+The parameter `force_all_finite` has been deprecated in favor of the `ensure_all_finite`
+parameter. You need to modify the call to the function to use the new parameter. So,
+the change is the same as for `validate_data` and will look like this:
+
+``` py
+from sklearn.utils.validation import check_array
+
+check_array(X, force_all_finite=True)
+```
+
+to:
+
+``` py
+from sklearn_compat.utils.validation import check_array
+
+check_array(X, ensure_all_finite=True)
+```
+
 #### `_check_n_features` and `_check_feature_names` functions
 
 Similarly to `validate_data`, these two functions have been moved to
@@ -131,6 +151,33 @@ tags = get_tags(MyEstimator())
 ```
 
 Which uses `sklearn.utils.get_tags` under the hood from scikit-learn 1.6+.
+
+In case you want to extend the tags, you can inherit from the available tags:
+
+```py
+from sklearn_compat.utils._tags import Tags, InputTags
+
+class MyInputTags(InputTags):
+    dataframe: bool = False
+
+class MyEstimator(BaseEstimator):
+    def __sklearn_tags__(self):
+        tags = super().__sklearn_tags__()
+        tags.input_tags = MyInputTags(
+            one_d_array=tags.input_tags.one_d_array,
+            two_d_array=tags.input_tags.two_d_array,
+            sparse=tags.input_tags.sparse,
+            category=True,
+            dataframe=True,
+            string=tags.input_tags.string,
+            dict=tags.input_tags.dict,
+            positive_only=tags.input_tags.positive_only,
+            allow_nan=tags.input_tags.allow_nan,
+            pairwise=tags.input_tags.pairwise,
+        )
+        return tags
+```
+
 
 #### `check_estimator` and `parametrize_with_checks` functions
 

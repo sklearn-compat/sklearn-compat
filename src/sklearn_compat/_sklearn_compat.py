@@ -12,6 +12,7 @@ Version: 0.1.1
 from __future__ import annotations
 
 import functools
+import inspect
 import platform
 import sys
 from dataclasses import dataclass, field
@@ -452,6 +453,60 @@ if sklearn_version < parse_version("1.6"):
         """
         return estimator._check_feature_names(X, reset=reset)
 
+    def check_array(
+        array,
+        accept_sparse=False,
+        *,
+        accept_large_sparse=True,
+        dtype="numeric",
+        order=None,
+        copy=False,
+        force_writeable=False,
+        ensure_all_finite=None,
+        ensure_non_negative=False,
+        ensure_2d=True,
+        allow_nd=False,
+        ensure_min_samples=1,
+        ensure_min_features=1,
+        estimator=None,
+        input_name="",
+    ):
+        """Input validation on an array, list, sparse matrix or similar.
+
+        Check the original documentation for more details:
+        https://scikit-learn.org/stable/modules/generated/sklearn.utils.check_array.html
+        """
+        from sklearn.utils.validation import check_array as _check_array
+
+        if ensure_all_finite is not None:
+            force_all_finite = ensure_all_finite
+        else:
+            force_all_finite = True
+
+        check_array_params = inspect.signature(_check_array).parameters
+        kwargs = {}
+        if "force_writeable" in check_array_params:
+            kwargs["force_writeable"] = force_writeable
+        if "ensure_non_negative" in check_array_params:
+            kwargs["ensure_non_negative"] = ensure_non_negative
+
+        return _check_array(
+            array,
+            accept_sparse=accept_sparse,
+            accept_large_sparse=accept_large_sparse,
+            dtype=dtype,
+            order=order,
+            copy=copy,
+            force_all_finite=force_all_finite,
+            ensure_2d=ensure_2d,
+            allow_nd=allow_nd,
+            ensure_min_samples=ensure_min_samples,
+            ensure_min_features=ensure_min_features,
+            estimator=estimator,
+            input_name=input_name,
+            **kwargs,
+        )
+
     # tags infrastructure
     @dataclass(**_dataclass_args())
     class InputTags:
@@ -753,5 +808,6 @@ else:
     from sklearn.utils.validation import (
         _check_feature_names,  # noqa: F401
         _check_n_features,  # noqa: F401
+        check_array,  # noqa: F401
         validate_data,  # noqa: F401
     )
