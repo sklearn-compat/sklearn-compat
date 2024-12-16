@@ -171,6 +171,7 @@ if sklearn_version < parse_version("1.3"):
             return wrapper
 
         return decorator
+
 else:
     # parameter validation
 
@@ -356,17 +357,54 @@ if sklearn_version < parse_version("1.6"):
         yield _construct_instance(Estimator)
 
     # validation
-    def validate_data(_estimator, /, **kwargs):
-        if "ensure_all_finite" in kwargs:
-            force_all_finite = kwargs.pop("ensure_all_finite")
+    def validate_data(
+        _estimator,
+        /,
+        X="no_validation",
+        y="no_validation",
+        reset=True,
+        validate_separately=False,
+        skip_check_array=False,
+        **kwargs,
+    ):
+        """Validate input data and set or check feature names and counts of the input.
+
+        See the original scikit-learn documentation:
+        https://scikit-learn.org/stable/modules/generated/sklearn.utils.validation.validate_data.html#sklearn.utils.validation.validate_data
+        """
+        if skip_check_array:
+            _check_n_features(_estimator, X, reset=reset)
+            _check_feature_names(_estimator, X, reset=reset)
+
+            no_val_X = isinstance(X, str) and X == "no_validation"
+            no_val_y = y is None or isinstance(y, str) and y == "no_validation"
+            if not no_val_X and no_val_y:
+                out = X
+            elif no_val_X and not no_val_y:
+                out = y
+            else:
+                out = X, y
+            return out
         else:
-            force_all_finite = True
-        return _estimator._validate_data(**kwargs, force_all_finite=force_all_finite)
+            if "ensure_all_finite" in kwargs:
+                force_all_finite = kwargs.pop("ensure_all_finite")
+            else:
+                force_all_finite = True
+            return _estimator._validate_data(
+                X=X,
+                y=y,
+                reset=reset,
+                validate_separately=validate_separately,
+                force_all_finite=force_all_finite,
+                **kwargs,
+            )
 
     def _check_n_features(estimator, X, *, reset):
+        """Set the `n_features_in_` attribute, or check against it on an estimator."""
         return estimator._check_n_features(X, reset=reset)
 
     def _check_feature_names(estimator, X, *, reset):
+        """Check `input_features` and generate names if needed."""
         return estimator._check_feature_names(X, reset=reset)
 
     def check_array(
