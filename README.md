@@ -534,17 +534,20 @@ class MetaEstimator(BaseEstimator):
         return self
 ```
 
-#### Upgrading to scikit-learn 1.3
+#### Upgrading to scikit-learn 1.2
 
 ### Parameter validation
 
 scikit-learn introduced a new way to validate parameters at `fit` time. The recommended
-way to support this feature in scikit-learn 1.3+ is to inherit from
+way to support this feature in scikit-learn 1.2+ is to inherit from
 `sklearn.base.BaseEstimator` and decorate the `fit` method using the decorator
-`sklearn.base._fit_context`.
+`sklearn.base._fit_context`. For functions, the decorator to use is
+`sklearn.utils._param_validation.validate_params`.
 
 We provide the function `sklearn_compat.base._fit_context` such that you can always
-decorate the `fit` method of your estimator.
+decorate the `fit` method of your estimator. Equivalently, you can use the function
+`sklearn_compat.utils._param_validation.validate_params` to validate the parameters
+of your function.
 
 ## Contributing
 
