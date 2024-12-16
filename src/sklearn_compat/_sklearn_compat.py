@@ -400,57 +400,11 @@ if sklearn_version < parse_version("1.6"):
             )
 
     def _check_n_features(estimator, X, *, reset):
-        """Set the `n_features_in_` attribute, or check against it on an estimator.
-
-        Parameters
-        ----------
-        estimator : estimator instance
-            The estimator to validate the input for.
-
-        X : {ndarray, sparse matrix} of shape (n_samples, n_features)
-            The input samples.
-
-        reset : bool
-            If True, the `n_features_in_` attribute is set to `X.shape[1]`.
-            If False and the attribute exists, then check that it is equal to
-            `X.shape[1]`. If False and the attribute does *not* exist, then
-            the check is skipped.
-
-            .. note::
-               It is recommended to call reset=True in `fit` and in the first
-               call to `partial_fit`. All other methods that validate `X`
-               should set `reset=False`.
-        """
+        """Set the `n_features_in_` attribute, or check against it on an estimator."""
         return estimator._check_n_features(X, reset=reset)
 
     def _check_feature_names(estimator, X, *, reset):
-        """Check `input_features` and generate names if needed.
-
-        Commonly used in :term:`get_feature_names_out`.
-
-        Parameters
-        ----------
-        input_features : array-like of str or None, default=None
-            Input features.
-
-            - If `input_features` is `None`, then `feature_names_in_` is
-              used as feature names in. If `feature_names_in_` is not defined,
-              then the following input feature names are generated:
-              `["x0", "x1", ..., "x(n_features_in_ - 1)"]`.
-            - If `input_features` is an array-like, then `input_features` must
-              match `feature_names_in_` if `feature_names_in_` is defined.
-
-        generate_names : bool, default=True
-            Whether to generate names when `input_features` is `None` and
-            `estimator.feature_names_in_` is not defined. This is useful for
-            transformers that validates `input_features` but do not require them in
-            :term:`get_feature_names_out` e.g. `PCA`.
-
-        Returns
-        -------
-        feature_names_in : ndarray of str or `None`
-            Feature names in.
-        """
+        """Check `input_features` and generate names if needed."""
         return estimator._check_feature_names(X, reset=reset)
 
     def check_array(
