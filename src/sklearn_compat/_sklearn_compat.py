@@ -484,6 +484,13 @@ if sklearn_version < parse_version("1.6"):
                 ensure_all_finite if ensure_all_finite is not None else force_all_finite
             )
 
+        check_X_y_params = inspect.signature(_check_X_y).parameters
+        kwargs = (
+            {"force_writeable": force_writeable}
+            if "force_writeable" in check_X_y_params
+            else {}
+        )
+
         return _check_X_y(
             X,
             y,
@@ -492,7 +499,6 @@ if sklearn_version < parse_version("1.6"):
             dtype=dtype,
             order=order,
             copy=copy,
-            force_writeable=force_writeable,
             force_all_finite=force_all_finite,
             ensure_2d=ensure_2d,
             allow_nd=allow_nd,
@@ -501,6 +507,7 @@ if sklearn_version < parse_version("1.6"):
             ensure_min_features=ensure_min_features,
             y_numeric=y_numeric,
             estimator=estimator,
+            **kwargs,
         )
 
     # tags infrastructure

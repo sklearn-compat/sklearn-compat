@@ -22,11 +22,11 @@ def test_check_array_ensure_all_finite():
 
 
 def test_check_X_y_ensure_all_finite():
-    X = [[1, 2, 3, np.nan]]
-    y = [1, 0, 1, 0]
+    X, y = [[1, 2, 3, np.nan]], [1]
     with pytest.raises(ValueError, match="contains NaN"):
-        check_X_y(X, ensure_all_finite=True)
-    assert isinstance(check_X_y(X, ensure_all_finite=False), np.ndarray)
+        check_X_y(X, y, ensure_all_finite=True)
+    X_, y_ = check_X_y(X, y, ensure_all_finite=False)
+    assert isinstance(X_, np.ndarray) and isinstance(y_, np.ndarray)
 
 
 @pytest.mark.parametrize("ensure_all_finite", [True, False])
