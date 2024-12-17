@@ -445,6 +445,69 @@ if sklearn_version < parse_version("1.6"):
             **kwargs,
         )
 
+    def check_X_y(
+        X,
+        y,
+        accept_sparse=False,
+        *,
+        accept_large_sparse=True,
+        dtype="numeric",
+        order=None,
+        copy=False,
+        force_writeable=False,
+        force_all_finite="deprecated",
+        ensure_all_finite=None,
+        ensure_2d=True,
+        allow_nd=False,
+        multi_output=False,
+        ensure_min_samples=1,
+        ensure_min_features=1,
+        y_numeric=False,
+        estimator=None,
+    ):
+        """Input validation for standard estimators.
+
+        Check the original documentation for more details:
+        https://scikit-learn.org/stable/modules/generated/sklearn.utils.check_X_y.html
+        """
+        from sklearn.utils.validation import check_X_y as _check_X_y
+
+        if ensure_all_finite is not None and force_all_finite != "deprecated":
+            raise ValueError(
+                "'force_all_finite' and 'ensure_all_finite' cannot be used together. "
+                "Pass `ensure_all_finite` only."
+            )
+        elif ensure_all_finite is None and force_all_finite == "deprecated":
+            force_all_finite = True
+        else:
+            force_all_finite = (
+                ensure_all_finite
+                if ensure_all_finite is not None
+                else force_all_finite
+            )
+
+        return _check_X_y(
+            X,
+            y,
+            accept_sparse=accept_sparse,
+            accept_large_sparse=accept_large_sparse,
+            dtype=dtype,
+            order=order,
+            copy=copy,
+            force_writeable=force_writeable,
+            force_all_finite=force_all_finite,
+            ensure_2d=ensure_2d,
+            allow_nd=allow_nd,
+            multi_output=multi_output,
+            ensure_min_samples=ensure_min_samples,
+            ensure_min_features=ensure_min_features,
+            y_numeric=y_numeric,
+            estimator=estimator,
+        )
+
+
+
+
     # tags infrastructure
     @dataclass(**_dataclass_args())
     class InputTags:
@@ -747,5 +810,6 @@ else:
         _check_feature_names,  # noqa: F401
         _check_n_features,  # noqa: F401
         check_array,  # noqa: F401
+        check_X_y,  # noqa: F401
         validate_data,  # noqa: F401
     )
