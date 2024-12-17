@@ -481,9 +481,7 @@ if sklearn_version < parse_version("1.6"):
             force_all_finite = True
         else:
             force_all_finite = (
-                ensure_all_finite
-                if ensure_all_finite is not None
-                else force_all_finite
+                ensure_all_finite if ensure_all_finite is not None else force_all_finite
             )
 
         return _check_X_y(
@@ -504,9 +502,6 @@ if sklearn_version < parse_version("1.6"):
             y_numeric=y_numeric,
             estimator=estimator,
         )
-
-
-
 
     # tags infrastructure
     @dataclass(**_dataclass_args())
