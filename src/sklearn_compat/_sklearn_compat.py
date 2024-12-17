@@ -137,30 +137,7 @@ def _to_new_tags(old_tags, estimator=None):
 if sklearn_version < parse_version("1.3"):
     # parameter validation
     def _fit_context(*, prefer_skip_nested_validation):
-        """Decorator to run the fit methods of estimators within context managers.
-
-        With scikit-learn < 1.3, this decorator is no-op.
-
-        Parameters
-        ----------
-        prefer_skip_nested_validation : bool
-            If True, the validation of parameters of inner estimators or functions
-            called during fit will be skipped.
-
-            This is useful to avoid validating many times the parameters passed by the
-            user from the public facing API. It's also useful to avoid validating
-            parameters that we pass internally to inner functions that are guaranteed to
-            be valid by the test suite.
-
-            It should be set to True for most estimators, except for those that receive
-            non-validated objects as parameters, such as meta-estimators that are given
-            estimator objects.
-
-        Returns
-        -------
-        decorated_fit : method
-            The decorated fit method.
-        """
+        """Decorator to run the fit methods of estimators within context managers."""
 
         def decorator(fit_method):
             @functools.wraps(fit_method)
@@ -172,10 +149,17 @@ if sklearn_version < parse_version("1.3"):
 
         return decorator
 
+    def validate_params(parameter_constraints, *, prefer_skip_nested_validation):
+        """Validate the parameters of an estimator."""
+        from sklearn.utils._param_validation import validate_params
+
+        return validate_params(parameter_constraints)
+
 else:
     # parameter validation
 
     from sklearn.base import _fit_context  # noqa: F401
+    from sklearn.utils._param_validation import validate_params  # noqa: F401
 
 
 ########################################################################################
