@@ -485,11 +485,9 @@ if sklearn_version < parse_version("1.6"):
             )
 
         check_X_y_params = inspect.signature(_check_X_y).parameters
-        kwargs = (
-            {"force_writeable": force_writeable}
-            if "force_writeable" in check_X_y_params
-            else {}
-        )
+        kwargs = {}
+        if "force_writeable" in check_array_params:
+            kwargs["force_writeable"] = force_writeable
 
         return _check_X_y(
             X,
