@@ -15,11 +15,11 @@ import functools
 import inspect
 import platform
 import sys
+import types
 from dataclasses import dataclass, field
 from typing import Callable, Literal
 
 import sklearn
-from sklearn.utils._param_validation import validate_parameter_constraints
 from sklearn.utils.fixes import parse_version
 
 sklearn_version = parse_version(parse_version(sklearn.__version__).base_version)
@@ -675,17 +675,19 @@ if sklearn_version < parse_version("1.6"):
         input_tags: InputTags = field(default_factory=InputTags)
 
     def _patched_more_tags(estimator, expected_failed_checks):
-        import copy
+        original_class_more_tags = estimator.__class__._more_tags
 
-        from sklearn.utils._tags import _safe_tags
+        def patched_instance_more_tags(self):
+            """Instance-level _more_tags that combines class tags with _xfail_checks"""
+            # Get tags from class-level _more_tags
+            tags = original_class_more_tags(self)
+            # Update with the xfail checks
+            tags.update({"_xfail_checks": expected_failed_checks})
+            return tags
 
-        original_tags = copy.deepcopy(_safe_tags(estimator))
-
-        def patched_more_tags(self):
-            original_tags.update({"_xfail_checks": expected_failed_checks})
-            return original_tags
-
-        estimator.__class__._more_tags = patched_more_tags
+        # Patch both class and instance level
+        estimator.__class__._more_tags = patched_instance_more_tags
+        estimator._more_tags = types.MethodType(patched_instance_more_tags, estimator)
         return estimator
 
     def check_estimator(
