@@ -206,8 +206,56 @@ if sklearn_version < parse_version("1.4"):
         ]
         return len(fitted_attrs) > 0
 
+    if sklearn_version < parse_version("1.3"):
+        # only define those functions to not raise an error.
+        def process_routing(_obj, _method, /, **kwargs):
+            pass
+
+        def _raise_for_params(params, owner, method):
+            pass
+    else:
+
+        def process_routing(_obj, _method, /, **kwargs):
+            """Validate and route input parameters."""
+            from sklearn.utils._metadata_requests import process_routing
+
+            return process_routing(_obj, _method, other_params=None, **kwargs)
+
+        def _raise_for_params(params, owner, method):
+            """Raise an error if metadata routing is not enabled and params are passed."""
+            from sklearn.utils._metadata_requests import _routing_enabled
+
+            caller = (
+                f"{owner.__class__.__name__}.{method}"
+                if method
+                else owner.__class__.__name__
+            )
+            if not _routing_enabled() and params:
+                raise ValueError(
+                    f"Passing extra keyword arguments to {caller} is only supported if"
+                    " enable_metadata_routing=True, which you can set using"
+                    " `sklearn.set_config`. See the User Guide"
+                    " <https://scikit-learn.org/stable/metadata_routing.html> for more"
+                    f" details. Extra parameters passed are: {set(params)}"
+                )
+
+    def _is_pandas_df(X):
+        """Return True if the X is a pandas dataframe."""
+        try:
+            pd = sys.modules["pandas"]
+        except KeyError:
+            return False
+        return isinstance(X, pd.DataFrame)
+
 else:
-    from sklearn.utils.validation import _is_fitted  # noqa: F401
+    from sklearn.utils.metadata_routing import (
+        _raise_for_params,  # noqa: F401
+        process_routing,  # noqa: F401
+    )
+    from sklearn.utils.validation import (
+        _is_fitted,  # noqa: F401
+        _is_pandas_df,  # noqa: F401
+    )
 
 
 ########################################################################################
