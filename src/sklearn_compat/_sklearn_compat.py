@@ -455,7 +455,6 @@ if sklearn_version < parse_version("1.6"):
         order=None,
         copy=False,
         force_writeable=False,
-        force_all_finite="deprecated",
         ensure_all_finite=None,
         ensure_2d=True,
         allow_nd=False,
@@ -472,21 +471,14 @@ if sklearn_version < parse_version("1.6"):
         """
         from sklearn.utils.validation import check_X_y as _check_X_y
 
-        if ensure_all_finite is not None and force_all_finite != "deprecated":
-            raise ValueError(
-                "'force_all_finite' and 'ensure_all_finite' cannot be used together. "
-                "Pass `ensure_all_finite` only."
-            )
-        elif ensure_all_finite is None and force_all_finite == "deprecated":
-            force_all_finite = True
+        if ensure_all_finite is not None:
+            force_all_finite = ensure_all_finite
         else:
-            force_all_finite = (
-                ensure_all_finite if ensure_all_finite is not None else force_all_finite
-            )
+            force_all_finite = True
 
         check_X_y_params = inspect.signature(_check_X_y).parameters
         kwargs = {}
-        if "force_writeable" in check_array_params:
+        if "force_writeable" in check_X_y_params:
             kwargs["force_writeable"] = force_writeable
 
         return _check_X_y(
