@@ -75,24 +75,26 @@ class MyEstimator(BaseEstimator):
         return self
 ```
 
-#### `check_array` function
+#### `check_array` and `check_X_y` functions
 
 The parameter `force_all_finite` has been deprecated in favor of the `ensure_all_finite`
 parameter. You need to modify the call to the function to use the new parameter. So,
 the change is the same as for `validate_data` and will look like this:
 
 ``` py
-from sklearn.utils.validation import check_array
+from sklearn.utils.validation import check_array, check_X_y
 
 check_array(X, force_all_finite=True)
+check_X_y(X, y, force_all_finite=True)
 ```
 
 to:
 
 ``` py
-from sklearn_compat.utils.validation import check_array
+from sklearn_compat.utils.validation import check_array, check_X_y
 
 check_array(X, ensure_all_finite=True)
+check_X_y(X, y, ensure_all_finite=True)
 ```
 
 #### `_check_n_features` and `_check_feature_names` functions
