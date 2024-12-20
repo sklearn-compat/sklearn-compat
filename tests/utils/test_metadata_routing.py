@@ -4,7 +4,7 @@ from sklearn import config_context
 from sklearn.base import BaseEstimator, ClassifierMixin, MetaEstimatorMixin, clone
 
 from sklearn_compat._sklearn_compat import parse_version, sklearn_version
-from sklearn_compat.utils.metadata_routing import _raise_for_params, process_routing
+from sklearn_compat.utils.metadata_routing import _raise_for_params
 
 
 @pytest.mark.skipif(
@@ -12,7 +12,14 @@ from sklearn_compat.utils.metadata_routing import _raise_for_params, process_rou
     reason="Metadata routing was introduced in scikit-learn 1.3",
 )
 def test_process_routing():
-    from sklearn.utils.metadata_routing import MetadataRouter, MethodMapping
+    """This test is used to check that what we mentioned in the documentation is
+    correct.
+    """
+    from sklearn.utils.metadata_routing import (
+        MetadataRouter,
+        MethodMapping,
+        process_routing,
+    )
 
     class ExampleClassifier(ClassifierMixin, BaseEstimator):
         def fit(self, X, y, sample_weight=None):
@@ -59,3 +66,12 @@ def test_raise_for_params():
 
     with pytest.raises(ValueError, match="Passing extra keyword arguments"):
         _raise_for_params(params, est, "fit")
+
+
+@pytest.mark.skipif(
+    sklearn_version >= parse_version("1.3"),
+    reason="Metadata routing is implemented",
+)
+def test__raise_for_params_not_implemented():
+    with pytest.raises(NotImplementedError):
+        _raise_for_params(None, None, "fit")
