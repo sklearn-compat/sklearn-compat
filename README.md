@@ -513,14 +513,15 @@ check_pandas_support("sklearn_compat")
 
 ### Upgrading to scikit-learn 1.4
 
-#### `process_routing` function
+#### `process_routing` and `_raise_for_params` functions
 
-The signature of the `process_routing` function changed in scikit-learn 1.4. You don't
-need to change the import but only the call to the function. Calling the function with
-the new signature will be compatible with the previous signature as well. So a code
-looking like this:
+The signature of the `process_routing` function changed in scikit-learn 1.4. You can
+import the function from `sklearn_compat.utils.metadata_routing`. The pattern will
+change from:
 
 ``` py
+from sklearn.utils.metadata_routing import process_routing
+
 class MetaEstimator(BaseEstimator):
     def fit(self, X, y, sample_weight=None, **fit_params):
         params = process_routing(self, "fit", fit_params, sample_weight=sample_weight)
@@ -530,10 +531,21 @@ class MetaEstimator(BaseEstimator):
 becomes:
 
 ``` py
+from sklearn_compat.utils.metadata_routing import process_routing
+
 class MetaEstimator(BaseEstimator):
     def fit(self, X, y, sample_weight=None, **fit_params):
         params = process_routing(self, "fit", sample_weight=sample_weight, **fit_params)
         return self
+```
+
+The `_raise_for_params` function was also introduced in scikit-learn 1.4. You can import
+it from `sklearn_compat.utils.metadata_routing`.
+
+``` py
+from sklearn_compat.utils.metadata_routing import _raise_for_params
+
+_raise_for_params(params, self, "fit")
 ```
 
 #### Upgrading to scikit-learn 1.2
