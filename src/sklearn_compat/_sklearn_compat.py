@@ -208,11 +208,22 @@ if sklearn_version < parse_version("1.4"):
 
     if sklearn_version < parse_version("1.3"):
 
+        def process_routing(_obj, _method, /, **kwargs):
+            raise NotImplementedError(
+                "Metadata routing is not implemented in scikit-learn < 1.3"
+            )
+
         def _raise_for_params(params, owner, method):
             raise NotImplementedError(
                 "Metadata routing is not implemented in scikit-learn < 1.3"
             )
     else:
+
+        def process_routing(_obj, _method, /, **kwargs):
+            """Validate and route input parameters."""
+            from sklearn.utils._metadata_requests import process_routing
+
+            return process_routing(_obj, _method, other_params=None, **kwargs)
 
         def _raise_for_params(params, owner, method):
             """Raise an error if metadata routing is not enabled and params are passed."""
@@ -241,7 +252,10 @@ if sklearn_version < parse_version("1.4"):
         return isinstance(X, pd.DataFrame)
 
 else:
-    from sklearn.utils.metadata_routing import _raise_for_params  # noqa: F401
+    from sklearn.utils.metadata_routing import (
+        _raise_for_params,  # noqa: F401
+        process_routing,  # noqa: F401
+    )
     from sklearn.utils.validation import (
         _is_fitted,  # noqa: F401
         _is_pandas_df,  # noqa: F401
