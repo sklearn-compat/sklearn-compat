@@ -57,7 +57,7 @@ such that you can have access to it in scikit-learn 1.2+. The pattern is the fol
 from sklearn.cluster import KMeans
 from sklearn_compat.base import is_clusterer
 
-is_clusterer(KMeans())
+is_clusterer(KMeans())`
 ```
 
 #### `validate_data` function
