@@ -48,6 +48,18 @@ where `_sklearn_compat` is the vendored version of `sklearn-compat` in your proj
 
 ### Upgrading to scikit-learn 1.6
 
+#### `is_clusterer` function
+
+The function `is_clusterer` has been added in `scikit-learn` 1.6. So we backport it
+such that you can have access to it in scikit-learn 1.2+. The pattern is the following:
+
+``` py
+from sklearn.cluster import KMeans
+from sklearn_compat.base import is_clusterer
+
+is_clusterer(KMeans())
+```
+
 #### `validate_data` function
 
 Your previous code could have looked like this:

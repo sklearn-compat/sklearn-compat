@@ -369,6 +369,11 @@ else:
 
 
 if sklearn_version < parse_version("1.6"):
+    # base
+    def is_clusterer(estimator):
+        """Return True if the given estimator is (probably) a clusterer."""
+        return get_tags(estimator).estimator_type == "clusterer"
+
     # test_common
     from sklearn.utils.estimator_checks import _construct_instance
 
@@ -832,6 +837,9 @@ if sklearn_version < parse_version("1.6"):
         return parametrize_with_checks(estimators)
 
 else:
+    # base
+    from sklearn.base import is_clusterer  # noqa: F401
+
     # test_common
     # tags infrastructure
     from sklearn.utils import (
