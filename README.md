@@ -156,6 +156,11 @@ class MyEstimator(BaseEstimator):
         return tags
 ```
 
+Notice however that some tags have different names in scikit-learn 1.6. For instance,
+to indicate that an estimator only handles binary classification, it needed to have the
+tag `binary_only` set to `True`, whereas in scikit-learn 1.6,
+`classifier_tags.multi_class` needs to be set to `False`.
+
 In order to get the tags of a given estimator, you can use the `get_tags` function:
 
 ``` py
