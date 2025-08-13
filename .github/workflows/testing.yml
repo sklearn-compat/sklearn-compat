@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
-        environment: [ci-sklearn13, ci-sklearn14, ci-sklearn15, ci-sklearn16, ci-sklearn17]
+        environment: [ci-sklearn12, ci-sklearn13, ci-sklearn14, ci-sklearn15, ci-sklearn16, ci-sklearn17]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5

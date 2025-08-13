@@ -46,6 +46,10 @@ from path.to._sklearn_compat import any_function
 
 where `_sklearn_compat` is the vendored version of `sklearn-compat` in your project.
 
+### Upgrading to scikit-learn 1.7
+
+There is no known breaking change for scikit-learn 1.7.
+
 ### Upgrading to scikit-learn 1.6
 
 #### `is_clusterer` function
