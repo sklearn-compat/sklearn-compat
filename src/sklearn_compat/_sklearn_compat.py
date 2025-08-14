@@ -6,7 +6,7 @@ This file is intended to be vendored in your project if you do not want to depen
 Be aware that depending on `sklearn-compat` does not add any additional dependencies:
 we are only depending on `scikit-learn`.
 
-Version: 0.1.3
+Version: 0.1.4
 """
 
 from __future__ import annotations

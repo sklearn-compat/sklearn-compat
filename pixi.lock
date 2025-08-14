@@ -7165,7 +7165,7 @@ packages:
   timestamp: 1753199211006
 - pypi: ./
   name: sklearn-compat
-  version: 0.1.3
+  version: 0.1.4
   sha256: ec0db6141051c1089bd18a25cc01330b0051b3f799e3398884685b3c7ef5ff32
   requires_dist:
   - scikit-learn>=1.2,<1.8
