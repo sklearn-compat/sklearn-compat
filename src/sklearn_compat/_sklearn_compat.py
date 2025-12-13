@@ -216,6 +216,7 @@ if sklearn_version < parse_version("1.4"):
             raise NotImplementedError(
                 "Metadata routing is not implemented in scikit-learn < 1.3"
             )
+
     else:
 
         def process_routing(_obj, _method, /, **kwargs):
@@ -242,14 +243,6 @@ if sklearn_version < parse_version("1.4"):
                     f" details. Extra parameters passed are: {set(params)}"
                 )
 
-    def _is_pandas_df(X):
-        """Return True if the X is a pandas dataframe."""
-        try:
-            pd = sys.modules["pandas"]
-        except KeyError:
-            return False
-        return isinstance(X, pd.DataFrame)
-
 else:
     from sklearn.utils.metadata_routing import (
         _raise_for_params,  # noqa: F401
@@ -257,7 +250,6 @@ else:
     )
     from sklearn.utils.validation import (
         _is_fitted,  # noqa: F401
-        _is_pandas_df,  # noqa: F401
     )
 
 
@@ -861,4 +853,100 @@ else:
         check_array,  # noqa: F401
         check_X_y,  # noqa: F401
         validate_data,  # noqa: F401
+    )
+
+########################################################################################
+# Upgrading for scikit-learn 1.8
+########################################################################################
+
+if sklearn_version < parse_version("1.8"):
+    if sklearn_version < parse_version("1.4"):
+
+        def is_pandas_df(X):
+            """Return True if the X is a pandas dataframe."""
+            try:
+                pd = sys.modules["pandas"]
+            except KeyError:
+                return False
+            return isinstance(X, pd.DataFrame)
+
+        def is_pandas_df_or_series(X):
+            """Return True if the X is a pandas dataframe or series."""
+            try:
+                pd = sys.modules["pandas"]
+            except KeyError:
+                return False
+            return isinstance(X, (pd.DataFrame, pd.Series))
+
+        def is_polars_df(X):
+            """Return True if the X is a polars dataframe."""
+            try:
+                pl = sys.modules["polars"]
+            except KeyError:
+                return False
+            return isinstance(X, pl.DataFrame)
+
+    else:
+        from sklearn.utils.validation import _is_pandas_df as is_pandas_df  # noqa: F401
+        from sklearn.utils.validation import (
+            _is_pandas_df_or_series as is_pandas_df_or_series,
+        )  # noqa: F401
+        from sklearn.utils.validation import _is_polars_df as is_polars_df  # noqa: F401
+
+    if sklearn_version < parse_version("1.5"):
+
+        def _is_polars_df_or_series(X):
+            """Return True if the X is a polars dataframe or series."""
+            try:
+                pl = sys.modules["polars"]
+            except KeyError:
+                return False
+            return isinstance(X, (pl.DataFrame, pl.Series))
+
+    else:
+        from sklearn.utils.validation import (
+            _is_polars_df_or_series as is_polars_df_or_series,
+        )  # noqa: F401
+
+    if sklearn_version < parse_version("1.7"):
+
+        def is_pyarrow_data(X):
+            """Return True if the X is a pyarrow Table, RecordBatch, Array or
+            ChunkedArray."""
+            try:
+                pa = sys.modules["pyarrow"]
+            except KeyError:
+                return False
+            return isinstance(X, (pa.Table, pa.RecordBatch, pa.Array, pa.ChunkedArray))
+
+    else:
+        from sklearn.utils.validation import (
+            _is_pyarrow_data as is_pyarrow_data,
+        )  # noqa: F401
+
+    def is_df_or_series(X):
+        """Return True if the X is a dataframe or series.
+
+        Parameters
+        ----------
+        X : {array-like, dataframe}
+            The array-like or dataframe object to check.
+
+        Returns
+        -------
+        bool
+            True if the X is a dataframe or series, False otherwise.
+        """
+        return (
+            is_pandas_df_or_series(X) or is_polars_df_or_series(X) or is_pyarrow_data(X)
+        )
+
+else:
+    from sklearn.utils._dataframe import (
+        is_df_or_series,  # noqa: F401
+        is_pandas_df_or_series,  # noqa: F401
+        is_pandas_df,  # noqa: F401
+        is_pyarrow_data,  # noqa: F401
+        is_polars_df_or_series,  # noqa: F401
+        is_polars_df,  # noqa: F401
     )
