@@ -895,7 +895,7 @@ if sklearn_version < parse_version("1.8"):
 
     if sklearn_version < parse_version("1.5"):
 
-        def _is_polars_df_or_series(X):
+        def is_polars_df_or_series(X):
             """Return True if the X is a polars dataframe or series."""
             try:
                 pl = sys.modules["polars"]
