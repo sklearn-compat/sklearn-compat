@@ -6,6 +6,7 @@ import pytest
 from sklearn._min_dependencies import dependent_packages
 from sklearn.utils._testing import _convert_container
 
+from sklearn_compat._sklearn_compat import parse_version, sklearn_version
 from sklearn_compat.utils._dataframe import (
     is_df_or_series,
     is_pandas_df,
@@ -16,7 +17,26 @@ from sklearn_compat.utils._dataframe import (
 )
 
 
-@pytest.mark.parametrize("constructor_name", ["pyarrow", "dataframe", "polars"])
+@pytest.mark.parametrize(
+    "constructor_name",
+    [
+        pytest.param(
+            "pyarrow",
+            marks=pytest.mark.skipif(
+                "pyarrow" not in dependent_packages,
+                reason="pyarrow not in dependent_packages",
+            ),
+        ),
+        "dataframe",
+        pytest.param(
+            "polars",
+            marks=pytest.mark.skipif(
+                "polars" not in dependent_packages,
+                reason="polars not in dependent_packages",
+            ),
+        ),
+    ],
+)
 def test_is_df_or_series(constructor_name):
     df = _convert_container([[1, 4, 2], [3, 3, 6]], constructor_name)
 
@@ -24,7 +44,26 @@ def test_is_df_or_series(constructor_name):
     assert not is_df_or_series(np.asarray([1, 2, 3]))
 
 
-@pytest.mark.parametrize("constructor_name", ["pyarrow", "dataframe", "polars"])
+@pytest.mark.parametrize(
+    "constructor_name",
+    [
+        pytest.param(
+            "pyarrow",
+            marks=pytest.mark.skipif(
+                "pyarrow" not in dependent_packages,
+                reason="pyarrow not in dependent_packages",
+            ),
+        ),
+        "dataframe",
+        pytest.param(
+            "polars",
+            marks=pytest.mark.skipif(
+                "polars" not in dependent_packages,
+                reason="polars not in dependent_packages",
+            ),
+        ),
+    ],
+)
 def test_is_pandas_df_other_libraries(constructor_name):
     df = _convert_container([[1, 4, 2], [3, 3, 6]], constructor_name)
     if constructor_name in ("pyarrow", "polars"):
@@ -56,8 +95,9 @@ def test_is_pandas_df_pandas_not_installed(hide_available_pandas):
             "pyarrow",
             dependent_packages.get("pyarrow", [None])[0],
             marks=pytest.mark.skipif(
-                "pyarrow" not in dependent_packages,
-                reason="pyarrow not in dependent_packages",
+                "pyarrow" not in dependent_packages
+                or sklearn_version < parse_version("1.4"),
+                reason="pyarrow not in dependent_packages or sklearn < 1.4",
             ),
         ),
         ("dataframe", dependent_packages["pandas"][0]),
@@ -65,18 +105,22 @@ def test_is_pandas_df_pandas_not_installed(hide_available_pandas):
             "polars",
             dependent_packages.get("polars", [None])[0],
             marks=pytest.mark.skipif(
-                "polars" not in dependent_packages,
-                reason="polars not in dependent_packages",
+                "polars" not in dependent_packages
+                or sklearn_version < parse_version("1.4"),
+                reason="polars not in dependent_packages or sklearn < 1.4",
             ),
         ),
     ],
 )
 def test_is_polars_df_other_libraries(constructor_name, minversion):
-    df = _convert_container(
-        [[1, 4, 2], [3, 3, 6]],
-        constructor_name,
-        minversion=minversion,
-    )
+    if constructor_name == "dataframe":
+        df = _convert_container([[1, 4, 2], [3, 3, 6]], constructor_name)
+    else:
+        df = _convert_container(
+            [[1, 4, 2], [3, 3, 6]],
+            constructor_name,
+            minversion=minversion,
+        )
     if constructor_name in ("pyarrow", "dataframe"):
         assert not is_polars_df(df)
     else:
@@ -123,7 +167,26 @@ def test_is_pandas_df_or_series_pandas_not_installed(hide_available_pandas):
     assert not is_pandas_df_or_series(1)
 
 
-@pytest.mark.parametrize("constructor_name", ["pyarrow", "dataframe", "polars"])
+@pytest.mark.parametrize(
+    "constructor_name",
+    [
+        pytest.param(
+            "pyarrow",
+            marks=pytest.mark.skipif(
+                "pyarrow" not in dependent_packages,
+                reason="pyarrow not in dependent_packages",
+            ),
+        ),
+        "dataframe",
+        pytest.param(
+            "polars",
+            marks=pytest.mark.skipif(
+                "polars" not in dependent_packages,
+                reason="polars not in dependent_packages",
+            ),
+        ),
+    ],
+)
 def test_is_pandas_df_or_series_other_libraries(constructor_name):
     df = _convert_container([[1, 4, 2], [3, 3, 6]], constructor_name)
     if constructor_name in ("pyarrow", "polars"):
@@ -150,8 +213,9 @@ def test_is_polars_df_or_series():
             "pyarrow",
             dependent_packages.get("pyarrow", [None])[0],
             marks=pytest.mark.skipif(
-                "pyarrow" not in dependent_packages,
-                reason="pyarrow not in dependent_packages",
+                "pyarrow" not in dependent_packages
+                or sklearn_version < parse_version("1.4"),
+                reason="pyarrow not in dependent_packages or sklearn < 1.4",
             ),
         ),
         ("dataframe", dependent_packages["pandas"][0]),
@@ -159,18 +223,22 @@ def test_is_polars_df_or_series():
             "polars",
             dependent_packages.get("polars", [None])[0],
             marks=pytest.mark.skipif(
-                "polars" not in dependent_packages,
-                reason="polars not in dependent_packages",
+                "polars" not in dependent_packages
+                or sklearn_version < parse_version("1.4"),
+                reason="polars not in dependent_packages or sklearn < 1.4",
             ),
         ),
     ],
 )
 def test_is_polars_df_or_series_other_libraries(constructor_name, minversion):
-    df = _convert_container(
-        [[1, 4, 2], [3, 3, 6]],
-        constructor_name,
-        minversion=minversion,
-    )
+    if constructor_name == "dataframe":
+        df = _convert_container([[1, 4, 2], [3, 3, 6]], constructor_name)
+    else:
+        df = _convert_container(
+            [[1, 4, 2], [3, 3, 6]],
+            constructor_name,
+            minversion=minversion,
+        )
     if constructor_name in ("pyarrow", "dataframe"):
         assert not is_polars_df_or_series(df)
     else:
@@ -199,8 +267,9 @@ def test_is_pyarrow_data():
             "pyarrow",
             dependent_packages.get("pyarrow", [None])[0],
             marks=pytest.mark.skipif(
-                "pyarrow" not in dependent_packages,
-                reason="pyarrow not in dependent_packages",
+                "pyarrow" not in dependent_packages
+                or sklearn_version < parse_version("1.4"),
+                reason="pyarrow not in dependent_packages or sklearn < 1.4",
             ),
         ),
         ("dataframe", dependent_packages["pandas"][0]),
@@ -208,18 +277,22 @@ def test_is_pyarrow_data():
             "polars",
             dependent_packages.get("polars", [None])[0],
             marks=pytest.mark.skipif(
-                "polars" not in dependent_packages,
-                reason="polars not in dependent_packages",
+                "polars" not in dependent_packages
+                or sklearn_version < parse_version("1.4"),
+                reason="polars not in dependent_packages or sklearn < 1.4",
             ),
         ),
     ],
 )
 def test_is_pyarrow_data_other_libraries(constructor_name, minversion):
-    df = _convert_container(
-        [[1, 4, 2], [3, 3, 6]],
-        constructor_name,
-        minversion=minversion,
-    )
+    if constructor_name == "dataframe":
+        df = _convert_container([[1, 4, 2], [3, 3, 6]], constructor_name)
+    else:
+        df = _convert_container(
+            [[1, 4, 2], [3, 3, 6]],
+            constructor_name,
+            minversion=minversion,
+        )
     if constructor_name == "pyarrow":
         assert is_pyarrow_data(df)
     else:
