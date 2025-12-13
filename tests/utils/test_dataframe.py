@@ -52,9 +52,23 @@ def test_is_pandas_df_pandas_not_installed(hide_available_pandas):
 @pytest.mark.parametrize(
     "constructor_name, minversion",
     [
-        ("pyarrow", dependent_packages["pyarrow"][0]),
+        pytest.param(
+            "pyarrow",
+            dependent_packages.get("pyarrow", [None])[0],
+            marks=pytest.mark.skipif(
+                "pyarrow" not in dependent_packages,
+                reason="pyarrow not in dependent_packages",
+            ),
+        ),
         ("dataframe", dependent_packages["pandas"][0]),
-        ("polars", dependent_packages["polars"][0]),
+        pytest.param(
+            "polars",
+            dependent_packages.get("polars", [None])[0],
+            marks=pytest.mark.skipif(
+                "polars" not in dependent_packages,
+                reason="polars not in dependent_packages",
+            ),
+        ),
     ],
 )
 def test_is_polars_df_other_libraries(constructor_name, minversion):
@@ -132,9 +146,23 @@ def test_is_polars_df_or_series():
 @pytest.mark.parametrize(
     "constructor_name, minversion",
     [
-        ("pyarrow", dependent_packages["pyarrow"][0]),
+        pytest.param(
+            "pyarrow",
+            dependent_packages.get("pyarrow", [None])[0],
+            marks=pytest.mark.skipif(
+                "pyarrow" not in dependent_packages,
+                reason="pyarrow not in dependent_packages",
+            ),
+        ),
         ("dataframe", dependent_packages["pandas"][0]),
-        ("polars", dependent_packages["polars"][0]),
+        pytest.param(
+            "polars",
+            dependent_packages.get("polars", [None])[0],
+            marks=pytest.mark.skipif(
+                "polars" not in dependent_packages,
+                reason="polars not in dependent_packages",
+            ),
+        ),
     ],
 )
 def test_is_polars_df_or_series_other_libraries(constructor_name, minversion):
@@ -167,9 +195,23 @@ def test_is_pyarrow_data():
 @pytest.mark.parametrize(
     "constructor_name, minversion",
     [
-        ("pyarrow", dependent_packages["pyarrow"][0]),
+        pytest.param(
+            "pyarrow",
+            dependent_packages.get("pyarrow", [None])[0],
+            marks=pytest.mark.skipif(
+                "pyarrow" not in dependent_packages,
+                reason="pyarrow not in dependent_packages",
+            ),
+        ),
         ("dataframe", dependent_packages["pandas"][0]),
-        ("polars", dependent_packages["polars"][0]),
+        pytest.param(
+            "polars",
+            dependent_packages.get("polars", [None])[0],
+            marks=pytest.mark.skipif(
+                "polars" not in dependent_packages,
+                reason="polars not in dependent_packages",
+            ),
+        ),
     ],
 )
 def test_is_pyarrow_data_other_libraries(constructor_name, minversion):
