@@ -1,0 +1,1 @@
+from sklearn_compat._sklearn_compat import _check_targets  # noqa: F401

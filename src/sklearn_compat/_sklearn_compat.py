@@ -941,6 +941,55 @@ if sklearn_version < parse_version("1.8"):
             is_pandas_df_or_series(X) or is_polars_df_or_series(X) or is_pyarrow_data(X)
         )
 
+    from sklearn.metrics._classification import (
+        _check_targets as _check_targets_without_weights,
+    )
+
+    def _check_targets(y_true, y_pred, sample_weight=None):
+        """Check that y_true and y_pred belong to the same classification task.
+
+        This converts multiclass or binary types to a common shape, and raises a
+        ValueError for a mix of multilabel and multiclass targets, a mix of
+        multilabel formats, for the presence of continuous-valued or multioutput
+        targets, or for targets of different lengths.
+
+        Column vectors are squeezed to 1d, while multilabel formats are returned
+        as CSR sparse label indicators.
+
+        Parameters
+        ----------
+        y_true : array-like
+
+        y_pred : array-like
+
+        sample_weight : array-like, default=None
+
+        Returns
+        -------
+        type_true : one of {'multilabel-indicator', 'multiclass', 'binary'}
+            The type of the true target data, as output by
+            ``utils.multiclass.type_of_target``.
+
+        y_true : array or indicator matrix
+
+        y_pred : array or indicator matrix
+
+        sample_weight : array or None
+        """
+        from sklearn.utils.validation import (
+            check_consistent_length,
+            _check_sample_weight,
+        )
+
+        y_type, y_true, y_pred = _check_targets_without_weights(y_true, y_pred)
+
+        if sample_weight is not None:
+            check_consistent_length(y_true, y_pred, sample_weight)
+            sample_weight = _check_sample_weight(
+                sample_weight, y_true, force_float_dtype=False
+            )
+        return y_type, y_true, y_pred, sample_weight
+
 else:
     from sklearn.utils._dataframe import (
         is_df_or_series,  # noqa: F401
@@ -950,3 +999,4 @@ else:
         is_polars_df_or_series,  # noqa: F401
         is_polars_df,  # noqa: F401
     )
+    from sklearn.metrics._classification import _check_targets  # noqa: F401
