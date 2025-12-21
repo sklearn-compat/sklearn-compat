@@ -985,9 +985,7 @@ if sklearn_version < parse_version("1.8"):
 
         if sample_weight is not None:
             check_consistent_length(y_true, y_pred, sample_weight)
-            sample_weight = _check_sample_weight(
-                sample_weight, y_true, force_float_dtype=False
-            )
+            sample_weight = _check_sample_weight(sample_weight, y_true)
         return y_type, y_true, y_pred, sample_weight
 
 else:
