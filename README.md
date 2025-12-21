@@ -46,6 +46,51 @@ from path.to._sklearn_compat import any_function
 
 where `_sklearn_compat` is the vendored version of `sklearn-compat` in your project.
 
+### Upgrading to scikit-learn 1.8
+
+#### DataFrame related utility functions
+
+The functions `is_df_or_series`, `is_pandas_df`, `is_pandas_df_or_series`,
+`is_polars_df`, `is_polars_df_or_series`, `is_pyarrow_data` have been added in
+`scikit-learn` 1.8. So we backport it such that you can have access to it in
+scikit-learn 1.2+. The pattern is the following:
+
+``` py
+from sklearn_compat.utils._dataframe import (
+    is_df_or_series,
+    is_pandas_df,
+    is_pandas_df_or_series,
+    is_polars_df,
+    is_polars_df_or_series,
+    is_pyarrow_data,
+)
+
+is_df_or_series(X)
+is_pandas_df(X)
+is_pandas_df_or_series(X)
+is_polars_df(X)
+is_polars_df_or_series(X)
+is_pyarrow_data(X)
+```
+
+Before those functions could have been named with a leading underscore and were
+available in the `sklearn.utils.validation` module.
+
+#### `_check_targets` function
+
+In `scikit-learn` 1.8, `_check_targets` from `sklearn.metrics._classification` now
+returns 4 values `(y_type, y_true, y_pred, sample_weight)` instead of 3. For backward
+compatibility with scikit-learn < 1.8, we provide a wrapper that ensures the function
+always returns 4 values. You can import it as:
+
+``` py
+from sklearn_compat.metrics._classification import _check_targets
+
+y_type, y_true, y_pred, sample_weight = _check_targets(
+    y_true, y_pred, sample_weight=None
+)
+```
+
 ### Upgrading to scikit-learn 1.7
 
 There is no known breaking change for scikit-learn 1.7.

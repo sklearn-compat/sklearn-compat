@@ -122,3 +122,4 @@ def test__to_object_array():
 def test__is_fitted():
     estimator = BaseEstimator()
     assert not _is_fitted(estimator)
+
