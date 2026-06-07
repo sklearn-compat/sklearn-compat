@@ -1074,9 +1074,13 @@ def _convert_container(
     from sklearn.utils._testing import _convert_container as _sklearn_convert_container
 
     # In scikit-learn 1.9, the "dataframe" constructor name was renamed to "pandas".
-    # "pandas" is accepted by all supported scikit-learn versions, so we always map it.
-    if constructor_name == "dataframe":
-        constructor_name = "pandas"
+    # Older versions only recognize "dataframe" (and silently return `None` for an
+    # unknown name), so we map to the spelling supported by the installed version.
+    if constructor_name in ("dataframe", "pandas"):
+        if sklearn_version < parse_version("1.9"):
+            constructor_name = "dataframe"
+        else:
+            constructor_name = "pandas"
 
     # In scikit-learn 1.9, the `columns_name` parameter was renamed to `column_names`.
     if columns_name is not None and column_names is not None:
