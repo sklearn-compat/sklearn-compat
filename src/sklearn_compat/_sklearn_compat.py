@@ -6,7 +6,7 @@ This file is intended to be vendored in your project if you do not want to depen
 Be aware that depending on `sklearn-compat` does not add any additional dependencies:
 we are only depending on `scikit-learn`.
 
-Version: 0.1.4
+Version: 0.1.6
 """
 
 from __future__ import annotations
@@ -970,31 +970,135 @@ if sklearn_version < parse_version("1.8"):
             The type of the true target data, as output by
             ``utils.multiclass.type_of_target``.
 
+        unique_labels : array
+            An ordered array of unique labels occurring either in `y_true`,
+            `y_pred` or both.
+
         y_true : array or indicator matrix
 
         y_pred : array or indicator matrix
 
         sample_weight : array or None
         """
+        from sklearn.utils.multiclass import unique_labels
         from sklearn.utils.validation import (
-            check_consistent_length,
             _check_sample_weight,
+            check_consistent_length,
         )
 
         y_type, y_true, y_pred = _check_targets_without_weights(y_true, y_pred)
+        labels = unique_labels(y_true, y_pred)
 
         if sample_weight is not None:
             check_consistent_length(y_true, y_pred, sample_weight)
             sample_weight = _check_sample_weight(sample_weight, y_true)
-        return y_type, y_true, y_pred, sample_weight
+        return y_type, labels, y_true, y_pred, sample_weight
 
 else:
     from sklearn.utils._dataframe import (
         is_df_or_series,  # noqa: F401
         is_pandas_df_or_series,  # noqa: F401
-        is_pandas_df,  # noqa: F401
-        is_pyarrow_data,  # noqa: F401
-        is_polars_df_or_series,  # noqa: F401
         is_polars_df,  # noqa: F401
+        is_polars_df_or_series,  # noqa: F401
+        is_pyarrow_data,  # noqa: F401
     )
-    from sklearn.metrics._classification import _check_targets  # noqa: F401
+
+    if sklearn_version < parse_version("1.9"):
+        from sklearn.metrics._classification import (
+            _check_targets as _check_targets_without_labels,
+        )
+
+        def _check_targets(y_true, y_pred, sample_weight=None):
+            """Check that y_true and y_pred belong to the same classification task.
+
+            In scikit-learn 1.9, `_check_targets` started returning an additional
+            `unique_labels` value as its second element. We backport that behavior
+            so that the function always returns 5 values
+            `(y_type, unique_labels, y_true, y_pred, sample_weight)`.
+            """
+            from sklearn.utils.multiclass import unique_labels
+
+            y_type, y_true, y_pred, sample_weight = _check_targets_without_labels(
+                y_true, y_pred, sample_weight=sample_weight
+            )
+            labels = unique_labels(y_true, y_pred)
+            return y_type, labels, y_true, y_pred, sample_weight
+
+    else:
+        from sklearn.metrics._classification import _check_targets  # noqa: F401
+
+    try:
+        # `is_pandas_df` is being removed from `sklearn.utils._dataframe` in favor of
+        # `narwhals.dependencies.is_pandas_dataframe` (scikit-learn PR #34089). At the
+        # time of writing this lands in a release *after* 1.9, so we rely on feature
+        # detection rather than a version check: import it while it is still available
+        # and fall back to a dependency-free backport once it is gone.
+        from sklearn.utils._dataframe import is_pandas_df  # noqa: F401
+    except ImportError:
+
+        def is_pandas_df(X):
+            """Return True if the X is a pandas dataframe."""
+            try:
+                pd = sys.modules["pandas"]
+            except KeyError:
+                return False
+            return isinstance(X, pd.DataFrame)
+
+
+########################################################################################
+# Upgrading for scikit-learn 1.9
+########################################################################################
+
+
+def _convert_container(
+    container,
+    constructor_name,
+    columns_name=None,
+    dtype=None,
+    minversion=None,
+    categorical_feature_names=None,
+    column_names=None,
+):
+    """Convert a container to a specific array-like, with backward compatibility.
+
+    This is a thin wrapper around ``sklearn.utils._testing._convert_container`` that
+    smooths out two breaking changes introduced in scikit-learn 1.9:
+
+    - the ``"dataframe"`` value of ``constructor_name`` was renamed to ``"pandas"``;
+    - the ``columns_name`` parameter was renamed to ``column_names``.
+
+    Both the old and new spellings are accepted here regardless of the installed
+    scikit-learn version. See the original scikit-learn documentation for the full
+    list of supported parameters and ``constructor_name`` values.
+    """
+    from sklearn.utils._testing import _convert_container as _sklearn_convert_container
+
+    # In scikit-learn 1.9, the "dataframe" constructor name was renamed to "pandas".
+    # Older versions only recognize "dataframe" (and silently return `None` for an
+    # unknown name), so we map to the spelling supported by the installed version.
+    if constructor_name in ("dataframe", "pandas"):
+        if sklearn_version < parse_version("1.9"):
+            constructor_name = "dataframe"
+        else:
+            constructor_name = "pandas"
+
+    # In scikit-learn 1.9, the `columns_name` parameter was renamed to `column_names`.
+    if columns_name is not None and column_names is not None:
+        raise TypeError("Provide either `columns_name` or `column_names`, not both.")
+    names = column_names if column_names is not None else columns_name
+
+    params = inspect.signature(_sklearn_convert_container).parameters
+    kwargs = {}
+    if "column_names" in params:
+        kwargs["column_names"] = names
+    elif "columns_name" in params:
+        kwargs["columns_name"] = names
+    for key, value in (
+        ("dtype", dtype),
+        ("minversion", minversion),
+        ("categorical_feature_names", categorical_feature_names),
+    ):
+        if key in params:
+            kwargs[key] = value
+
+    return _sklearn_convert_container(container, constructor_name, **kwargs)
