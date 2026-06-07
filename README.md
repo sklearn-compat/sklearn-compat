@@ -50,10 +50,13 @@ where `_sklearn_compat` is the vendored version of `sklearn-compat` in your proj
 
 #### `is_pandas_df` function
 
-In `scikit-learn` 1.9, the private helper `is_pandas_df` was removed from
-`sklearn.utils._dataframe` (it was replaced internally by
-`narwhals.dependencies.is_pandas_dataframe`). We keep providing a dependency-free
-backport so that you can keep using it across all supported `scikit-learn` versions:
+The private helper `is_pandas_df` is being removed from `sklearn.utils._dataframe`
+(it is replaced internally by `narwhals.dependencies.is_pandas_dataframe`). This
+removal is not part of `scikit-learn` 1.9 itself but is already merged on the
+development branch and will land in a future release. We keep providing a
+dependency-free backport (using feature detection, so it transparently uses the
+native implementation while it is still available) so that you can keep using it
+across all supported `scikit-learn` versions:
 
 ``` py
 from sklearn_compat.utils._dataframe import is_pandas_df
@@ -63,11 +66,13 @@ is_pandas_df(X)
 
 #### `_convert_container` testing helper
 
-In `scikit-learn` 1.9, the private testing helper
-`sklearn.utils._testing._convert_container` introduced two breaking changes:
+The private testing helper `sklearn.utils._testing._convert_container` is subject to
+two breaking changes:
 
-- the `"dataframe"` value of `constructor_name` was renamed to `"pandas"`;
-- the `columns_name` parameter was renamed to `column_names`.
+- the `columns_name` parameter was renamed to `column_names` (already in
+  `scikit-learn` 1.9);
+- the `"dataframe"` value of `constructor_name` was renamed to `"pandas"` (merged on
+  the development branch, lands in a future release).
 
 We provide a wrapper that accepts both the old and the new spellings, regardless of
 the installed `scikit-learn` version. So code like:

@@ -1027,12 +1027,15 @@ else:
     else:
         from sklearn.metrics._classification import _check_targets  # noqa: F401
 
-    if sklearn_version < parse_version("1.9"):
+    try:
+        # `is_pandas_df` is being removed from `sklearn.utils._dataframe` in favor of
+        # `narwhals.dependencies.is_pandas_dataframe` (scikit-learn PR #34089). At the
+        # time of writing this lands in a release *after* 1.9, so we rely on feature
+        # detection rather than a version check: import it while it is still available
+        # and fall back to a dependency-free backport once it is gone.
         from sklearn.utils._dataframe import is_pandas_df  # noqa: F401
-    else:
-        # `is_pandas_df` has been removed from `sklearn.utils._dataframe` in
-        # scikit-learn 1.9 in favor of `narwhals.dependencies.is_pandas_dataframe`.
-        # We backport a dependency-free implementation here.
+    except ImportError:
+
         def is_pandas_df(X):
             """Return True if the X is a pandas dataframe."""
             try:
