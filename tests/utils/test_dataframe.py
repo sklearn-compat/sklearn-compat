@@ -2,9 +2,7 @@
 
 import numpy as np
 import pytest
-
 from sklearn._min_dependencies import dependent_packages
-from sklearn.utils._testing import _convert_container
 
 from sklearn_compat._sklearn_compat import parse_version, sklearn_version
 from sklearn_compat.utils._dataframe import (
@@ -15,6 +13,7 @@ from sklearn_compat.utils._dataframe import (
     is_polars_df_or_series,
     is_pyarrow_data,
 )
+from sklearn_compat.utils._testing import _convert_container
 
 
 @pytest.mark.parametrize(

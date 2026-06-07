@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.utils._testing import _convert_container
 
+from sklearn_compat.utils._testing import _convert_container
 from sklearn_compat.utils.validation import (
     _check_feature_names,
     _check_n_features,
@@ -122,4 +122,3 @@ def test__to_object_array():
 def test__is_fitted():
     estimator = BaseEstimator()
     assert not _is_fitted(estimator)
-

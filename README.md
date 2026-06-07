@@ -46,6 +46,53 @@ from path.to._sklearn_compat import any_function
 
 where `_sklearn_compat` is the vendored version of `sklearn-compat` in your project.
 
+### Upgrading to scikit-learn 1.9
+
+#### `is_pandas_df` function
+
+In `scikit-learn` 1.9, the private helper `is_pandas_df` was removed from
+`sklearn.utils._dataframe` (it was replaced internally by
+`narwhals.dependencies.is_pandas_dataframe`). We keep providing a dependency-free
+backport so that you can keep using it across all supported `scikit-learn` versions:
+
+``` py
+from sklearn_compat.utils._dataframe import is_pandas_df
+
+is_pandas_df(X)
+```
+
+#### `_convert_container` testing helper
+
+In `scikit-learn` 1.9, the private testing helper
+`sklearn.utils._testing._convert_container` introduced two breaking changes:
+
+- the `"dataframe"` value of `constructor_name` was renamed to `"pandas"`;
+- the `columns_name` parameter was renamed to `column_names`.
+
+We provide a wrapper that accepts both the old and the new spellings, regardless of
+the installed `scikit-learn` version. So code like:
+
+``` py
+from sklearn.utils._testing import _convert_container
+
+X = _convert_container(
+    [[1, 2, 3, 4]], "dataframe", columns_name=["a", "b", "c", "d"]
+)
+```
+
+becomes:
+
+``` py
+from sklearn_compat.utils._testing import _convert_container
+
+X = _convert_container(
+    [[1, 2, 3, 4]], "dataframe", columns_name=["a", "b", "c", "d"]
+)
+```
+
+You can also use the new `"pandas"` / `column_names` spelling and it will work on
+older `scikit-learn` versions as well.
+
 ### Upgrading to scikit-learn 1.8
 
 #### DataFrame related utility functions
@@ -78,18 +125,29 @@ available in the `sklearn.utils.validation` module.
 
 #### `_check_targets` function
 
-In `scikit-learn` 1.8, `_check_targets` from `sklearn.metrics._classification` now
-returns 4 values `(y_type, y_true, y_pred, sample_weight)` instead of 3. For backward
-compatibility with scikit-learn < 1.8, we provide a wrapper that ensures the function
-always returns 4 values. You can import it as:
+The number of values returned by `_check_targets` from
+`sklearn.metrics._classification` changed across scikit-learn versions:
+
+- scikit-learn < 1.8 returned 3 values `(y_type, y_true, y_pred)`;
+- scikit-learn 1.8 returned 4 values `(y_type, y_true, y_pred, sample_weight)`;
+- scikit-learn 1.9 returns 5 values
+  `(y_type, unique_labels, y_true, y_pred, sample_weight)`.
+
+For backward compatibility, we provide a wrapper that always returns the latest
+5-value form, backporting `unique_labels` (and `sample_weight`) for older
+scikit-learn versions. You can import it as:
 
 ``` py
 from sklearn_compat.metrics._classification import _check_targets
 
-y_type, y_true, y_pred, sample_weight = _check_targets(
+y_type, unique_labels, y_true, y_pred, sample_weight = _check_targets(
     y_true, y_pred, sample_weight=None
 )
 ```
+
+> **Note**: if you were relying on the previous 4-value form provided by
+> `sklearn-compat`, you now need to unpack the additional `unique_labels` value
+> in second position.
 
 ### Upgrading to scikit-learn 1.7
 
