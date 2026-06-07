@@ -17,7 +17,7 @@ jobs:
         environment: [ci-sklearn12, ci-sklearn13, ci-sklearn14, ci-sklearn15, ci-sklearn16, ci-sklearn17, ci-sklearn18, ci-sklearn19]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - uses: prefix-dev/setup-pixi@5185adfbffb4bd703da3010310260805d89ebb11 # v0.9.6
         with:
           pixi-version: v0.70.1
@@ -32,7 +32,7 @@ jobs:
         run: pixi run -e ${{ matrix.environment }} tests
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: sklearn-compat/sklearn_compat
